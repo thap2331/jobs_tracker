@@ -23,4 +23,4 @@
 - Create a table with a organization's website, its name, jobs website, ats if exists.
 
 ### Personal motivation
-- In addition to the above annoyance about checking jobs everyday, I wanted to use bash as much as possible in this project (just for learning purposes). I am against other language ideas.
+- In addition to the above annoyance about checking jobs everyday, I wanted to use bash as much as possible in this project (just for learning purposes). I am not against other language ideas.
