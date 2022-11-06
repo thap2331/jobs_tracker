@@ -16,6 +16,7 @@
 - texastribune
 
 # Planned feature extension
+- add Joblisting link: allow for pattern in  a list, allow for xpath addition
 - Allow Postgres and SQLite option (or more as needed)
 - Add front end functionality to add job websites to database
 - Use containerize services
