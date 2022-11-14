@@ -3,8 +3,6 @@ sys.path.insert(0, '.')
 
 import random
 
-from scraping.pipeline import ProcessData
-from database.data_models import Jobs
 from database.db_manager import Ingestion
 from database.data_models import JobListingMeta
 
@@ -22,13 +20,6 @@ class AddCompaniesMetadata:
 
         id = random.randint(0, 200000)
 
-        # data = CompaniesCrawlMeta(
-        #     name=company_name,
-        #     alternative_names=alternative_names,
-        #     website=website_link
-        # )
-
-        # self.ingestion.ingest_data(data)
 
     def add_job_listing(self, url, job_identifier='link', type='company', company_id=None):
         if type != 'company':
@@ -57,11 +48,11 @@ class AddJobListing:
 
         title_in_posting = False
 
-        if title_in_link:
-            if title_in_link.lower() in ['y', 'yes', True]:
-                title_in_link = True
-            else:
-                title_in_link = False
+        # if title_in_link:
+        #     if title_in_link.lower() in ['y', 'yes', True]:
+        #         title_in_link = True
+        #     else:
+        #         title_in_link = False
 
         if not title_in_link:
             title_in_posting = True

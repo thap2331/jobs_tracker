@@ -10,11 +10,6 @@ class Validation:
         self.db = DBConnect()
         self.ingestion = Ingestion()
 
-    def fetchall_requested_columns(self, table, colname):
-        db_records = self.db.sql_fetchall(table, colname)
-
-        return db_records
-
     def new_found_jobs(self, data, db_records, colname):
         new_jobs = []
 
@@ -25,9 +20,9 @@ class Validation:
         
         return new_jobs
 
-    def validate_new_jobs(self, data, table, colname):
-        db_records = self.fetchall_requested_columns(table=table, colname=colname)
-        new_jobs = self.new_found_jobs(data, db_records, colname)
+    def validate_new_jobs(self, data, table, primary_key=None):
+        db_records = self.db.sql_fetchall_columns_records(table=table, colname=primary_key)
+        new_jobs = self.new_found_jobs(data, db_records, primary_key)
 
         return new_jobs
 
@@ -46,6 +41,7 @@ class Ingestion:
             return
 
         self.db.insert(data)
+        print(f'1 record {data} inserted.')
 
         return
 
@@ -57,7 +53,7 @@ class ProcessData:
         self.validation = Validation()
 
     def process_data(self, data: Jobs):
-        validated_data = self.validation.validate_new_jobs(data, Jobs, 'id')
+        validated_data = self.validation.validate_new_jobs(data, Jobs, primary_key='job_link')
         self.ingestion.ingest_data(validated_data)
 
         return

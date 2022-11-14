@@ -1,6 +1,7 @@
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from database.db_configs import db_path
+from sqlalchemy import inspect
 
 class DBConnect:
     def __init__(self) -> None:
@@ -18,17 +19,29 @@ class DBConnect:
             session.commit()
             session.close()
 
-    def sql_fetchall(self, table, colname):
+    def sql_fetchall_columns_records(self, table, colname):
         try:
             Session = sessionmaker(bind=self.engine)
             session = Session()
-            all_records = session.query(table).all()
-            records = [r.__dict__.get(colname) for r in all_records]
+            records = session.query(table.job_link).all()
             return records
         except Exception as e:
             print(e)
         finally:
             session.close()
+
+    def sql_fetchall_records(self, table):
+        try:
+            Session = sessionmaker(bind=self.engine)
+            session = Session()
+            all_records = session.query(table).all()
+            records = [{c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs} for obj in all_records]
+            return records
+        except Exception as e:
+            print(e)
+        finally:
+            session.close()
+
 
 class Ingestion:
     def __init__(self) -> None:

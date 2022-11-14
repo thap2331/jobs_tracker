@@ -6,15 +6,18 @@ Base = declarative_base()
 class Jobs(Base):
 
     __tablename__ = "jobs"
-    id = Column(String, primary_key=True)
-    job_link = Column(String)
-    job_title = Column(String)
+    job_link        = Column(String, primary_key=True)
+    job_title       = Column(String)
+    job_listing_url = Column(String)
+    source          = Column(String)
+    notified        = Column(Boolean)
 
-    def __init__(self, id, job_link, job_title):
-        self.id = id
-        self.job_link = job_link
-        self.job_title = job_title
-
+    def __init__(self, job_link, job_title, job_listing_url, source, notified=False):
+        self.job_link           = job_link
+        self.job_title          = job_title
+        self.job_listing_url    = job_listing_url
+        self.source             = source
+        self.notified           = notified
 
 class JobListingMeta(Base):
 
