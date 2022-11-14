@@ -2,8 +2,15 @@
 
 # How to use
 
-- Add a job listing
+- First time use
+-- git clone repo
+-- bash shell_scripts/start_clean_slate.sh
+
+- You can do below to add job listing page
+-- Add a job listing
   `python3 tracker/add_job_listing.py -u https://www.onxmaps.com/join-our-team -jt "backend engineer"`
+-- You can do below to crawl
+  `pythonr scraping/crawl.py`
 
 ### What is the repo about?
 
@@ -31,6 +38,9 @@
 - ~~Url join~~
 - ~~Front-end~~
 - ~~Add do not follow these links such as .pdf~~
+- Allow email if not notified yet
+- Add cron job
+- Front end
 - see if title is in the headings
 - allow crawl for all by catching exception and logging them
 - allow ability to load jobs from past and skip seen jobs
