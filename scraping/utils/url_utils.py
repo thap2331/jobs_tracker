@@ -4,7 +4,7 @@ class UrlUtils:
     def __init__(self) -> None:
         self.follow_pattern = {
             "do_not_follow_endswith": ['.pdf'],
-            "prefix": ['mailto:']
+            "prefix": ['mailto:', 'mail:', '#header']
         }
         
     def should_follow(self, link: str):

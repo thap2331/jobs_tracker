@@ -52,18 +52,19 @@ class ScrapeUtils:
 
         return soup
 
-    def get_all_links(self, soup, url):
+    def get_all_links(self, soup, listing_url: str):
         proper_links = []
         all_links_tags = soup.find_all('a')
         all_links = [i.get('href') for i in all_links_tags]
 
         for link in all_links:
-            #join url
-            url = urljoin(url, link)
+            url = urljoin(listing_url, link)
 
             #check for should follow
             if UrlUtils().should_follow(url):
                 proper_links.append(url)
+
+        proper_links = list(set(proper_links))
 
         return proper_links
 
@@ -86,7 +87,7 @@ class TitleFinderStrategy:
         listing_url = config.get('url')
         title = config.get('job_title')
         soup = ScrapeUtils().get_soup(listing_url)
-        all_urls = ScrapeUtils().get_all_links(soup=soup, url=listing_url)
+        all_urls = ScrapeUtils().get_all_links(soup=soup, listing_url=listing_url)
 
         if all_urls:
             print('\nTesting ', len(all_urls), 'for ', listing_url, 'Trying different strategies.\n')
@@ -124,7 +125,7 @@ class CrawlPrepare:
             listing_url = data.get('url')
             title = data.get('job_title')
             soup = ScrapeUtils().get_soup(listing_url)
-            all_urls = ScrapeUtils().get_all_links(soup=soup, url=listing_url)
+            all_urls = ScrapeUtils().get_all_links(soup=soup, listing_url=listing_url)
 
         if all_urls:
             print('\nTesting ', len(all_urls), 'for ', listing_url, 'Setting found in existing settings.\n')
