@@ -13,9 +13,9 @@ class PageTitleAnalyzer(TitleStrategies):
 
         return False
 
-    def contains_title(self, title, url, soup):
+    def contains_title(self, title, url, markup):
         titles = title.split(';')
-        page_title = soup.title
+        page_title = BeautifulSoup(markup, features='lxml').title
         if not page_title:
             return False
 

@@ -38,8 +38,12 @@
 - ~~Url join~~
 - ~~Front-end~~
 - ~~Add do not follow these links such as .pdf~~
-- Allow email if not notified yet
+- ~~Add email method~~
+- ~~request to add your email and one pass~~
+- add render in config
+- think about pagination - pagination in url param + pagination in
 - Add cron job
+- Allow email if not notified yet
 - Front end
 - see if title is in the headings
 - allow crawl for all by catching exception and logging them
@@ -47,6 +51,14 @@
 - for add job listing, allow capability to add job posting or view job listing to be added, check for duplicates
 - Optimize the crawlers
 - add capability to be less verbose sqlite/
+- Tighten render: always render and return markup. First, request html and then selenium render.
+
+- Bug
+-- recrawl fails
+
+- Annoying things
+-- sqlite verbose
+-- Add progress bar for pages scraped
 
 # Planned feature extension
 
