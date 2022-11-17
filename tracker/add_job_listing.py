@@ -15,6 +15,7 @@ parser.add_argument('--company_name', '-c', default='', help='Company name')
 parser.add_argument('--company_website', '-w', default='', help='Company website.')
 parser.add_argument('--alternative_names', '-n', default='', help='Alternative names.')
 parser.add_argument('--source_type', '-s', default='', help='Source types.')
+parser.add_argument('--render', '-r', action='store_true', default=False, help='Render')
 
 
 args = parser.parse_args()
@@ -27,8 +28,7 @@ company_name = args.company_name
 company_website = args.company_website
 alternative_names = args.alternative_names
 source_type = args.source_type
-
-
+render = args.render
 
 normalized_data = AddJobListing().normalize_data(
     url=url,
@@ -39,7 +39,8 @@ normalized_data = AddJobListing().normalize_data(
     company_name=company_name,
     company_website=company_website,
     alternative_names=alternative_names,
-    source_type=source_type
+    source_type=source_type,
+    render=render
 )
 
 print(normalized_data.__dict__)

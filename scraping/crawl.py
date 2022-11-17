@@ -1,17 +1,13 @@
 import sys
 sys.path.insert(0, '.')
 
-from bs4 import BeautifulSoup
-from validator_collection import validators
-import requests, inspect, importlib
+import inspect, importlib
 
 from scraping.pipeline import ProcessData
 from database.data_models import Jobs
 from database.db_manager import DBConnect
 from database.data_models import JobListingMeta
-from sqlalchemy import select
 from scraping.title_base import TitleStrategies
-from scraping.utils.url_utils import UrlUtils
 from scraping.utils.extract_links import ExtractAllLinks
 from scraping.utils.markup_utils import MarkupUtils
 
@@ -46,8 +42,9 @@ class ScrapeUtils:
         self.extract_links_method = ExtractAllLinks()
         self.markup_utils = MarkupUtils()
 
-    def extract_links(self, link, render=False):
+    def extract_links(self, link, config):
         all_urls = []
+        render = config.get('render')
         if render:
             markup = self.markup_utils.render_request_html(link)
         else:
@@ -76,7 +73,7 @@ class TitleFinderStrategy:
 
         listing_url = config.get('url')
         title = config.get('job_title')
-        all_urls = self.scrapeutils.extract_links(listing_url)
+        all_urls = self.scrapeutils.extract_links(listing_url, config)
 
         if all_urls:
             print('\nTesting ', len(all_urls), 'for ', listing_url, 'Trying different strategies.\n')
@@ -85,6 +82,7 @@ class TitleFinderStrategy:
         for n, url in enumerate(all_urls):
             markup = MarkupUtils().normal_requests(url)
             if 'timeout' in str(markup).lower():
+                #make this better. timeout python error only
                 continue
             for strategy in strategies_list:
                 found_title = strategy.contains_title(title, url, markup)
@@ -99,7 +97,7 @@ class TitleFinderStrategy:
                     print('\n job data from different strategy:', job.__dict__)
                     ProcessData().process_data([job])
                     break
-            sys.stdout.write(f'\r{n} of {len(all_urls)} completed.')
+            sys.stdout.write(f'\r{n+1} of {len(all_urls)} completed.')
             sys.stdout.flush()
 
 
@@ -118,7 +116,7 @@ class CrawlPrepare:
         if stratgey_in_settings:
             listing_url = data.get('url')
             title = data.get('job_title')
-            all_urls = self.scrapeutils.extract_links(listing_url)
+            all_urls = self.scrapeutils.extract_links(listing_url, data)
 
         if all_urls:
             print('\nTesting ', len(all_urls), 'for ', listing_url, 'Setting found in existing settings:',
@@ -138,7 +136,7 @@ class CrawlPrepare:
                 )
                 ProcessData().process_data([job])
                 print('\n job data found from existing settings', job.__dict__)
-            sys.stdout.write(f'\r{n} of {len(all_urls)} completed.')
+            sys.stdout.write(f'\r{n+1} of {len(all_urls)} completed.')
             sys.stdout.flush()
 
 

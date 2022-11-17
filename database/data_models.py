@@ -32,9 +32,10 @@ class JobListingMeta(Base):
     company_website     = Column(String)
     alternative_names   = Column(String)
     source_type         = Column(String) #Company or ats
+    render              = Column(Boolean)
 
     def __init__(self, url, title_in_link, title_in_posting, title_in_page_title, job_link_pattern, job_title,
-    company_name, company_website, alternative_names, source_type):
+    company_name, company_website, alternative_names, source_type, render):
         self.url                    = url
         self.title_in_link          = title_in_link
         self.title_in_posting       = title_in_posting
@@ -45,6 +46,7 @@ class JobListingMeta(Base):
         self.company_website        = company_website
         self.alternative_names      = alternative_names
         self.source_type            = source_type
+        self.render                 = render
 
 
 class CrawlLogs(Base):

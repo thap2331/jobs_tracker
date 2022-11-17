@@ -20,7 +20,7 @@ class MarkupUtils:
         session = HTMLSession()
         response = session.get(url)
         response.html.render()
-        rendered_html = response.html
+        rendered_html = response.html.html
         session.close()
 
         return rendered_html

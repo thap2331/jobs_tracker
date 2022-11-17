@@ -41,18 +41,13 @@ class AddJobListing:
         company_website = kwargs.get("company_website")
         alternative_names = kwargs.get("alternative_names")
         source_type = kwargs.get("source_type")
+        render = kwargs.get("render")
 
 
         if not url:
             raise ValueError('Url not provided.')
 
         title_in_posting = False
-
-        # if title_in_link:
-        #     if title_in_link.lower() in ['y', 'yes', True]:
-        #         title_in_link = True
-        #     else:
-        #         title_in_link = False
 
         if not title_in_link:
             title_in_posting = True
@@ -72,7 +67,8 @@ class AddJobListing:
             company_name=company_name,
             company_website=company_website,
             alternative_names=alternative_names,
-            source_type=source_type
+            source_type=source_type,
+            render = render
             )
 
         return JobMetaObject
@@ -90,6 +86,3 @@ class AddJobListing:
 
         self.ingestion.ingest_data(job_listing_object)
         
-
-
-# AddCompaniesMetadata().add_company('https://jobs.lever.co/economicmodeling/', 'b', 'emsi')

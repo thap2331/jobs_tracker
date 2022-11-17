@@ -40,7 +40,8 @@
 - ~~Add do not follow these links such as .pdf~~
 - ~~Add email method~~
 - ~~request to add your email and one pass~~
-- add render in config
+- ~~add render in config~~
+- allow ability to recrawl without restarting
 - think about pagination - pagination in url param + pagination in
 - Add cron job
 - Allow email if not notified yet
@@ -52,6 +53,7 @@
 - Optimize the crawlers
 - add capability to be less verbose sqlite/
 - Tighten render: always render and return markup. First, request html and then selenium render.
+- allow render for job posting pages as well
 
 - Bug
 -- recrawl fails
