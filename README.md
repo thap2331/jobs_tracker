@@ -41,7 +41,8 @@
 - ~~Add email method~~
 - ~~request to add your email and one pass~~
 - ~~add render in config~~
-- allow ability to recrawl without restarting
+- ~~allow ability to recrawl without restarting~~
+- ~~title with dash~~
 - think about pagination - pagination in url param + pagination in
 - Add cron job
 - Allow email if not notified yet
@@ -56,7 +57,7 @@
 - allow render for job posting pages as well
 
 - Bug
--- recrawl fails
+-- progress bar has % sign at the end
 
 - Annoying things
 -- sqlite verbose

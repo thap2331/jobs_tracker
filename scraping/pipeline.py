@@ -22,7 +22,8 @@ class Validation:
 
     def validate_new_jobs(self, data, table, primary_key=None):
         db_records = self.db.sql_fetchall_columns_records(table=table, colname=primary_key)
-        new_jobs = self.new_found_jobs(data, db_records, primary_key)
+        pk_records = [row[0] for row in db_records]
+        new_jobs = self.new_found_jobs(data, pk_records, primary_key)
 
         return new_jobs
 

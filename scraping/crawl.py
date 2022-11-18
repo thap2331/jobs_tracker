@@ -94,7 +94,7 @@ class TitleFinderStrategy:
                         job_listing_url=listing_url,
                         source=strategy.source
                     )
-                    print('\n job data from different strategy:', job.__dict__)
+                    print(f'\n{job_title} job:', job.__dict__.get('job_link'))
                     ProcessData().process_data([job])
                     break
             sys.stdout.write(f'\r{n+1} of {len(all_urls)} completed.')
@@ -135,7 +135,7 @@ class CrawlPrepare:
                     source=stratgey_in_settings.source
                 )
                 ProcessData().process_data([job])
-                print('\n job data found from existing settings', job.__dict__)
+                print(f'\n{job_title} job:', job.__dict__.get('job_link'))
             sys.stdout.write(f'\r{n+1} of {len(all_urls)} completed.')
             sys.stdout.flush()
 
