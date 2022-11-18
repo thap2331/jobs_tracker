@@ -2,15 +2,17 @@
 
 # How to use
 
-- First time use
--- git clone repo
--- bash shell_scripts/start_clean_slate.sh
+### First time use
+- git clone repo
+- bash shell_scripts/start_clean_slate.sh
 
-- You can do below to add job listing page
--- Add a job listing
+### You can do below to add job listing page
+- Add a job listing
   `python3 tracker/add_job_listing.py -u https://www.onxmaps.com/join-our-team -jt "backend engineer"`
--- You can do below to crawl
+- To start crawling, you can do below to crawl
   `pythonr scraping/crawl.py`
+- check if jobs were added in the database
+  `sqlite3 database/jobs.db`
 
 ### What is the repo about?
 
