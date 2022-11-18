@@ -43,10 +43,9 @@
 - ~~Add email method~~
 - ~~request to add your email and one pass~~
 - ~~add render in config~~
-- add a db for supported websites
-- allow ability to recrawl without restarting
 - ~~allow ability to recrawl without restarting~~
 - ~~title with dash~~
+- add a db for supported websites
 - think about pagination - pagination in url param + pagination in
 - Add cron job
 - Allow email if not notified yet
