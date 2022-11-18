@@ -2,15 +2,17 @@
 
 # How to use
 
-- First time use
--- git clone repo
--- bash shell_scripts/start_clean_slate.sh
+### First time use
+- git clone repo
+- bash shell_scripts/start_clean_slate.sh
 
-- You can do below to add job listing page
--- Add a job listing
+### You can do below to add job listing page
+- Add a job listing
   `python3 tracker/add_job_listing.py -u https://www.onxmaps.com/join-our-team -jt "backend engineer"`
--- You can do below to crawl
+- To start crawling, you can do below to crawl
   `pythonr scraping/crawl.py`
+- check if jobs were added in the database
+  `sqlite3 database/jobs.db`
 
 ### What is the repo about?
 
@@ -43,6 +45,8 @@
 - ~~add render in config~~
 - add a db for supported websites
 - allow ability to recrawl without restarting
+- ~~allow ability to recrawl without restarting~~
+- ~~title with dash~~
 - think about pagination - pagination in url param + pagination in
 - Add cron job
 - Allow email if not notified yet
@@ -57,7 +61,7 @@
 - allow render for job posting pages as well
 
 - Bug
--- recrawl fails
+-- progress bar has % sign at the end
 
 - Annoying things
 -- sqlite verbose
