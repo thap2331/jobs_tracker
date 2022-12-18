@@ -4,6 +4,7 @@ from sqlalchemy.orm import declarative_base, relationship
 Base = declarative_base()
 
 class Jobs(Base):
+    #Update this class name to JobsResults since this is filled after scraping
 
     __tablename__ = "jobs"
     job_link        = Column(String, primary_key=True)

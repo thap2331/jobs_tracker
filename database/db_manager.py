@@ -1,7 +1,12 @@
+import sys
+sys.path.insert(0, '.')
+
+from sqlalchemy import update
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, select
 from database.db_configs import db_path
 from sqlalchemy import inspect
+from database.data_models import Jobs
 
 class DBConnect:
     def __init__(self) -> None:
@@ -41,6 +46,18 @@ class DBConnect:
             print(e)
         finally:
             session.close()
+
+    def update_records(self, tablename, col_to_update, col_to_update_val, condition_col, condition_col_val):
+        try:
+            Session = sessionmaker(bind=self.engine)
+            session = Session()
+            session.query(Jobs).filter(Jobs.job_link == condition_col_val).update({col_to_update: col_to_update_val})
+            session.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            session.close()
+
 
 
 class Ingestion:
