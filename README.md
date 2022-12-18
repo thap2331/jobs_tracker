@@ -27,7 +27,8 @@
 
 ### Supported OS system
 
-- In Linux boxes only for now.
+- Linux: Easy support in Linux boxes for now.
+- Windows: Get (git) bash on windows.
 
 ### Supported Organizations
 
@@ -45,13 +46,15 @@
 - ~~add render in config~~
 - ~~allow ability to recrawl without restarting~~
 - ~~title with dash~~
-- add a db for supported websites
+- ~~add a db for supported websites - not sure what I was thinking~~
+- ~~Allow email if not notified yet~~
+- keep things in docker
+- have a test env including dummy data for all tables
+- allow crawl for all by catching exception and logging them
+- Front end
 - think about pagination - pagination in url param + pagination in
 - Add cron job
-- Allow email if not notified yet
-- Front end
 - see if title is in the headings
-- allow crawl for all by catching exception and logging them
 - allow ability to load jobs from past and skip seen jobs
 - for add job listing, allow capability to add job posting or view job listing to be added, check for duplicates
 - Optimize the crawlers
@@ -88,3 +91,9 @@
 - validate url
 - url normalizer
 -
+
+
+### Email config
+- https://realpython.com/python-send-email/
+- https://stackoverflow.com/questions/73026671/how-do-i-now-since-june-2022-send-an-email-via-gmail-using-a-python-script
+- https://stackoverflow.com/questions/72478573/how-to-send-an-email-using-python-after-googles-policy-update-on-not-allowing-j

@@ -3,3 +3,5 @@ requests==2.22.0
 SQLAlchemy==1.4.40
 validator_collection==1.5.0
 python-dotenv
+requests_html==0.10.0
+furl==2.1.3

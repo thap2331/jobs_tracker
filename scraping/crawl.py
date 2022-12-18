@@ -76,7 +76,7 @@ class TitleFinderStrategy:
         all_urls = self.scrapeutils.extract_links(listing_url, config)
 
         if all_urls:
-            print('\nTesting ', len(all_urls), 'for ', listing_url, 'Trying different strategies.\n')
+            print('\n\nTesting', len(all_urls), 'urls for', listing_url, 'Trying different strategies.\n')
 
         #try in order
         for n, url in enumerate(all_urls):
@@ -119,7 +119,7 @@ class CrawlPrepare:
             all_urls = self.scrapeutils.extract_links(listing_url, data)
 
         if all_urls:
-            print('\nTesting ', len(all_urls), 'for ', listing_url, 'Setting found in existing settings:',
+            print('\n\nTesting ', len(all_urls), 'for ', listing_url, 'Setting found in existing settings:',
             stratgey_in_settings.__class__.__name__, '\n')
 
         for n,url in enumerate(all_urls):
