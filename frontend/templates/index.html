@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id = 'main-title-container'>
+    <h1 id = 'main-title'>Job Tracking Dashboard</h1>
+</div>
+
+<!-- Create tabs -->
+<div class = 'tabs'>
+    <button class="tab-button active" onClick="openTab(event, 'scraping-list')">Scraping List</button>
+    <button class="tab-button" onClick="openTab(event, 'results-list')">Results List</button>
+</div>
+        
+<!-- Create tab content -->
+<div id="scraping-list" class="tab-content">
+    <table id="scraping-list-table">
+        <tr class="table-header">
+            <th>Company Name</th>
+            <th>Job Listings Link</th>
+            <th>Job Title</th>
+            <th>Options</th>
+        </tr>
+        {% for row in searchTableData %}
+            <tr>
+                <td>{{ row['company_name'] }}</td>
+                <td><a href="{{ row['url'] }}" rel="noopener noreferrer" target="_blank">{{ row['url'] }}</a></td>
+                <td>{{ row['job_title'] }}</td>
+                <td class="options-col">
+                    <form action="/update" method="POST" class="inline-form">
+                        <input style = 'display:none;' value = "{{ row['url'] }}" name = 'link'>
+                        <button class="update-button">Update</button>
+                    </form>
+                    <form action="/delete" method="POST" class="inline-form">
+                        <input type="submit" value="Delete" class = "del-button"
+                        onclick="return confirm('Are you sure you want to delete this entry?')">
+                        <input style = 'display:none;' value = "{{ row['url'] }}" name = 'link'>
+                        <input style = 'display:none;' value = "joblisting" name = 'del_type'>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <form action="/add_search" class="add-button-form">
+        <button class="add-button">Add Entry</button>
+        <div class="spacer" style="clear: both;"></div>
+    </form>
+</div>
+<div id="results-list" class="tab-content">
+    <table id="results-list-table">
+        <tr class="table-header">
+            <th>Job Link</th>
+            <th>Job Title</th>
+            <th>Company Job Listings Link</th>
+            <th>Source</th>
+            <th>Notified</th>
+            <th>Options</th>
+        </tr>
+        {% for row in resultsTableData %}
+        <tr>
+            <td><a href="{{ row['job_link'] }}" rel="noopener noreferrer" target="_blank">{{ row['job_link'] }}</a></td>
+            <td>{{ row['job_title'] }}</td>
+            <td><a href="{{ row['job_listing_url'] }}" rel="noopener noreferrer" target="_blank">{{ row['job_listing_url'] }}</a></td>
+            <td>{{ row['source'] }}</td>
+            <td>{{ 'Yes' if row['notified'] == 1 else 'No' }}</td>
+            <td class="options-col">
+                <form action="/delete", method="POST">
+                    <input type="submit" value="Delete" class = "del-button"
+                    onclick="return confirm('Are you sure you want to delete this entry?')">
+                    <input style = 'display:none;' value = "{{ row['job_link'] }}" name = 'link'>
+                    <input style = 'display:none;' value = "jobs" name = 'del_type'>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

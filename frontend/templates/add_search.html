@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id = 'main-title-container'>
+    <h1 id = 'main-title'>Add New Scraping Entry</h1>
+</div>
+{% for message in get_flashed_messages() %}
+<div class="alert">{{ message }}</div>
+{% endfor %}
+<form method="post" class="new-update-form">
+    <label for="company_name">Company Name <span class='optional'>(optional)</span></label>
+    <input type="text" name="company_name" value="{{ request.form['company_name'] }}"></input>
+
+    <label for="job_title">Job Title</label>
+    <input name="job_title" value="{{ request.form['job_title'] }}"></input>
+
+    <label for="url">Job Listings Link</label>
+    <input name="url" value="{{ request.form['url'] }}"></input>
+
+    <label for="company_website">Main Company Website <span class='optional'>(optional)</span></label>
+    <input name="company_website" value="{{ request.form['company_website'] }}"></input>
+
+    <button type="submit" class="submit-button">Submit</button>
+</form>
+{% endblock %}
+
