@@ -15,6 +15,7 @@ class GetDBCreds:
 
     def get_runmode(self):
         my_run_mode = None
+        # ny
 
         if os.getenv("run_mode")=="prod" or os.getenv("run_mode") is None:
             my_run_mode = "prod"
@@ -57,15 +58,16 @@ class GetDBCreds:
     def get_conn_string_python_psycopg2(self):
         if self.run_mode == "prod":
             connection_string = f'host={self.prod_host_name}\
-                                    database={self.prod_db_name}\
-                                    user="postgres"\
-                                    password="pass"\
+                                    dbname={self.prod_db_name}\
+                                    user=postgres\
+                                    password=pass\
                                     port={self.prod_port_exposed}'
 
         if self.run_mode == "test":
             connection_string = f'host={self.test_host_name}\
-                                    database={self.test_db_name}\
-                                    user="postgres"\
-                                    password="pass"\
+                                    dbname={self.test_db_name}\
+                                    user=postgres\
+                                    password=pass\
                                     port={self.test_port_exposed}'
-        return connection_string 
+            print(connection_string)
+        return connection_string

@@ -1,21 +1,32 @@
+import sys
+sys.path.insert(0, '.')
+
 from flask import Flask, render_template, request, url_for, redirect, flash
-import sqlite3
+from psycopg2.extras import RealDictCursor
+import sqlite3, psycopg2, os, time, subprocess, json
+
+print(os.getenv("run_mode"))
+from frontend_db_configs import GetDBCreds
+
+conn_string = GetDBCreds().get_conn_string_python_psycopg2()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '6d1209d285f8030865a7faac38ec5b5e4c5d11fa994f0854'
 
-
 # Create SQL conn
 def get_db_connection():
-    conn = sqlite3.connect('../database/jobs.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
+    try:
+        conn = psycopg2.connect(conn_string)
+        return conn
+    except Exception as e:
+        print("Cannot connect to pg using ",conn_string, '\n error:', e)
 
 # Get search row
 def get_search_row(link):
     conn = get_db_connection()
-    row = conn.execute('SELECT * FROM joblisting WHERE url = ?', (link,)).fetchone()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM joblisting WHERE url = %s', (link,))
+    row = cursor.fetchone()
     conn.close()
     return row
 
@@ -23,17 +34,24 @@ def get_search_row(link):
 # Get results row
 def get_results_row(link):
     conn = get_db_connection()
-    row = conn.execute('SELECT * FROM jobs WHERE job_link = ?', (link,)).fetchone()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM jobs WHERE job_link = %s', (link,))
+    row = cursor.fetchone()
     conn.close()
     return row
-
 
 # Homepage
 @app.route("/")
 def index():
     conn = get_db_connection()
-    searchTableData = conn.execute('SELECT * FROM joblisting').fetchall()
-    resultsTableData = conn.execute('SELECT * FROM jobs').fetchall()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM joblisting')
+    searchTableData = cursor.fetchall()
+
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM jobs')
+    resultsTableData = cursor.fetchall()
+    
     conn.close()
     return render_template('index.html', searchTableData = searchTableData, resultsTableData = resultsTableData)
 
@@ -57,7 +75,8 @@ def add_search():
             flash('Job listings link is required!')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT INTO joblisting (company_name, job_title, url, company_website) VALUES (?, ?, ?, ?)', (company_name, job_title, url, company_website))
+            cursor = conn.cursor()
+            cursor.execute('INSERT INTO joblisting (company_name, job_title, url, company_website) VALUES (%s, %s, %s, %s)', (company_name, job_title, url, company_website))
 
             conn.commit()
             conn.close()
@@ -91,7 +110,8 @@ def send_update():
         flash('Job listings link is required!')
     else:
         conn = get_db_connection()
-        conn.execute('UPDATE joblisting SET company_name = ?, job_title = ?, url = ?, company_website = ? WHERE url = ?', (company_name, job_title, url, company_website, request.form['original_link']))
+        cursor = conn.cursor()
+        cursor.execute('UPDATE joblisting SET company_name = %s, job_title = %s, url = %s, company_website = %s WHERE url = %s', (company_name, job_title, url, company_website, request.form['original_link']))
 
         conn.commit()
         conn.close()
@@ -107,10 +127,12 @@ def delete():
 
     if del_type == 'joblisting':
         conn = get_db_connection()
-        conn.execute('DELETE FROM joblisting WHERE url = ?', (request.form['link'],))
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM joblisting WHERE url = %s', (request.form['link'],))
     else:
         conn = get_db_connection()
-        conn.execute('DELETE FROM jobs WHERE job_link = ?', (request.form['link'],))
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM jobs WHERE job_link = %s', (request.form['link'],))
 
     conn.commit()
     conn.close()

@@ -1,5 +1,7 @@
+.env.dev
 .env
 *.db
 __pycache__
 /db_backups
 venv
+data

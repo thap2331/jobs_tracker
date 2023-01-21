@@ -1,17 +1,18 @@
 import sys
 sys.path.insert(0, '.')
 
+import os
 from sqlalchemy import update
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, select
-from database.db_configs import db_path
+from database.db_configs import GetDBCreds
 from sqlalchemy import inspect
 from database.data_models import Jobs
 
 class DBConnect:
     def __init__(self) -> None:
-        self.db_path = db_path
-        self.engine = create_engine(f'sqlite:///{self.db_path}', echo = True)
+        conn_string = GetDBCreds().get_conn_string_sql_alchemy()
+        self.engine = create_engine(conn_string)
 
     def insert(self, data):
         try:
