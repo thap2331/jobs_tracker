@@ -14,20 +14,20 @@ services:
     networks:
       - jt_network
 
-  # database_prod:
-  #   container_name: jt_pg_container
-  #   image: postgres:14.6
-  #   restart: always
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: pass
-  #     POSTGRES_DB: jt_db
-  #   volumes:
-  #      - jt_pg_vol_prod:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-  #   networks:
-  #     - jt_network
+  database_prod:
+    container_name: jt_pg_container
+    image: postgres:14.6
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: jt_db
+    volumes:
+       - jt_pg_vol_prod:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - jt_network
 
   database_test:
     container_name: test_jt_pg_container
@@ -44,19 +44,6 @@ services:
     networks:
       - jt_network
 
-
-  # crawl:
-  #   container_name: crawlbox
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.crawl
-  #   volumes:
-  #     - pg_vol:/pgdata/data
-  #   links:
-  #     - database
-    # depends_on:
-    #   - database   
-
   frontend:
     container_name: jt_frontend
     build:
@@ -72,47 +59,10 @@ services:
     environment:
       run_mode: ${run_mode}
     links:
-      # - database_prod
+      - database_prod
       - database_test
     networks:
       - jt_network
-    # depends_on:
-    #     database:
-    #       condition: service_healthy
-    # healthcheck: 
-    #     test: [ "CMD-SHELL", "psql -U postgres" ] 
-    #     interval: 5s
-    #     timeout: 5s
-    #     retries: 5
-
-
-    # command: bash -c "bash shell_scripts/initialize.sh" 
-
-    # container_name: sqlite3_container
-    # # image: keinos/sqlite3:3.40.1
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.database
-    # volumes:
-    #   # - "$(pwd)"/database/:/fuckthis
-    #   # - sqlite_vol:/etc/
-    #   - type: volume
-    #     source: sqlite_vol
-    #     target: /db
-    # ports:
-      # - '9000:9000'
-    # command:
-    #   - "jobs.db"
-  # crawl:
-  #   container_name: scraping_container
-  #   image: python:3.10.9-slim-buster
-    # volumes: 
-    #   - sqlite_vol:/database/jobs.db
-
-# docker run --rm -it -v "$(pwd)/database/:/fuckthis" -w /fuckthis keinos/sqlite3:3.40.1
-# docker run --rm -it --mount type=bind,source="$(pwd)"/database,target=/fuckthis -w /fuckthis keinos/sqlite3:3.40.1
-      # - sqlite_vol:/database
-      # - sqlite_vol:/database/jobs.db
 
 volumes:
   jt_pg_vol_prod:

@@ -17,7 +17,7 @@ set -a
 if [ $run_mode == "test" ]
 then
     echo "Test mode activated"
-    source .env.development
+    source .env.dev
 else
     echo "Prod mode activated"
     source .env

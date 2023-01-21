@@ -12,13 +12,13 @@ echo "previous_success $previous_success"
 
 if [[ $previous_success -ne 0 ]]
 then
-    echo Pg is not ready. Try setting up the database again.
+    echo Test Pg container is not ready. Try setting up the database again.
     exit
 fi
 
 if [[ $previous_success -eq 0 ]]
 then
-    echo Pg is ready.
+    echo Test Pg container is ready.
 fi
 
 echo running: python database/initialize_database.py

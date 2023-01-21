@@ -11,12 +11,6 @@ from database.data_models import Jobs
 
 class DBConnect:
     def __init__(self) -> None:
-        # db_path=f'postgresql+psycopg2://{db_creds["user"]}:{db_creds["password"]}@{db_creds["host"]}/{db_creds["db_name"]}'
-        # test_db_path=f'postgresql+psycopg2://{db_creds["user"]}:{db_creds["password"]}@{db_creds["host"]}/{db_creds["test_db_name"]}'
-        
-        # if os.getenv("run_mode") == "test":
-        #     self.engine = create_engine(test_db_path)
-        # else:
         conn_string = GetDBCreds().get_conn_string_sql_alchemy()
         self.engine = create_engine(conn_string)
 

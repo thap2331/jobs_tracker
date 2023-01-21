@@ -15,30 +15,18 @@ app.config['SECRET_KEY'] = '6d1209d285f8030865a7faac38ec5b5e4c5d11fa994f0854'
 
 # Create SQL conn
 def get_db_connection():
-    conn = psycopg2.connect(conn_string)
-    return conn
-
-    # for i in range(0, 50):
-    #     print("connection try round:", i)
-    #     try:
-    #         # conn = psycopg2.connect(host=db_creds["host"],
-    #         #                         database=db_name,
-    #         #                         user=db_creds["user"],
-    #         #                         password=db_creds["password"])
-    #         print("connection string in flask app is: ", conn_string)
-    #         conn = psycopg2.connect(conn_string)
-    #         return conn
-    #     except Exception as e:
-    #         print("error: ", e)
-    #         # print("sleep")
-    #         # subprocess.run(["bash", "initialize.sh"])
-    #         # time.sleep(5)
+    try:
+        conn = psycopg2.connect(conn_string)
+        return conn
+    except Exception as e:
+        print("Cannot connect to pg using ",conn_string, '\n error:', e)
 
 # Get search row
 def get_search_row(link):
     conn = get_db_connection()
     cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM joblisting WHERE url = %s', (link,)).fetchone()
+    cursor.execute('SELECT * FROM joblisting WHERE url = %s', (link,))
+    row = cursor.fetchone()
     conn.close()
     return row
 
@@ -47,10 +35,10 @@ def get_search_row(link):
 def get_results_row(link):
     conn = get_db_connection()
     cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM jobs WHERE job_link = %s', (link,)).fetchone()
+    cursor.execute('SELECT * FROM jobs WHERE job_link = %s', (link,))
+    row = cursor.fetchone()
     conn.close()
     return row
-
 
 # Homepage
 @app.route("/")
@@ -88,7 +76,7 @@ def add_search():
         else:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute('INSERT INTO joblisting (company_name, job_title, url, company_website) VALUES %s, %s, %s, %s)', (company_name, job_title, url, company_website))
+            cursor.execute('INSERT INTO joblisting (company_name, job_title, url, company_website) VALUES (%s, %s, %s, %s)', (company_name, job_title, url, company_website))
 
             conn.commit()
             conn.close()
