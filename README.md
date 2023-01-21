@@ -49,6 +49,8 @@
 - ~~add a db for supported websites - not sure what I was thinking~~
 - ~~Allow email if not notified yet~~
 - keep things in docker
+  - initialize test db
+  - allow ability to run dead container and set up from there
 - have a test env including dummy data for all tables
 - allow crawl for all by catching exception and logging them
 - Front end
