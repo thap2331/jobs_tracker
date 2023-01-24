@@ -24,15 +24,15 @@
   - `git clone [repo]`
   - Copy .env.example and create .env.dev file. 
     - `cp .env.example .env.dev`
-    - Fill out as needed with `run_mode=test`
-  - `setup/test_setup.sh`
+    - Fill out `.env.dev` file as needed. Fill `run_mode=test`.
+  - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
 
-### Setup
+##### Setup
 
-- set up your environment `source setenv.sh test`
-- `docker compose up`
-- Run `setup/test_setup.sh` to create your database.
-  This will create the tables and add few sample rows.
+- Set up your environment `source setenv.sh test`
+- Run `docker compose up` . Wait till all services are up.
+- Now, run `setup/test_setup.sh` to create tables in your test database.
+  This will also add a few sample rows.
   - Now go to [localhost:5000](http://localhost:5000/). You should see a page.
 
 ### Start crawling
@@ -64,6 +64,7 @@
 - ~~title with dash~~
 - ~~add a db for supported websites - not sure what I was thinking~~
 - ~~Allow email if not notified yet~~
+- Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl,
 - Add cron job
   - To run crawl
   - To send emails
@@ -84,6 +85,7 @@
   - Allow crawl logs to have when a website was crawled
   - allow crawl for all by catching exception and logging them
   - for add job listing, allow capability to add job posting or view job listing to be added, check for duplicates
+  - crawl logs with capability to say how many new jobs found
   - Optimize crawers
     - Optimze the crawlers
 - Crawling strategy

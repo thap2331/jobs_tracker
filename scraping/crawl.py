@@ -2,9 +2,10 @@ import sys
 sys.path.insert(0, '.')
 
 import inspect, importlib
+from datetime import datetime
 
 from scraping.pipeline import ProcessData
-from database.data_models import Jobs
+from database.data_models import Jobs, CrawlLogs
 from database.db_manager import DBConnect
 from database.data_models import JobListingMeta
 from scraping.title_base import TitleStrategies
