@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Identity, Boolean
+from sqlalchemy import Column, String, Integer, ForeignKey, Identity, Boolean, DateTime
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -54,3 +54,4 @@ class CrawlLogs(Base):
 
     __tablename__ = 'crawlogs'
     url = Column(String, primary_key = True)
+    last_attempted_crawl = Column(DateTime, nullable = False)
