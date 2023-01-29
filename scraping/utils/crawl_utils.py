@@ -10,7 +10,7 @@ from database.db_manager import DBConnect
 from scraping.title_base import TitleStrategies
 from scraping.utils.extract_links import ExtractAllLinks
 from scraping.utils.markup_utils import MarkupUtils
-
+from tracker.add_crawl_logs import AddCrawlLogs
 
 class StrategyList():
 
@@ -115,7 +115,7 @@ class Crawl:
 
     def __init__(self) -> None:
         self.db = DBConnect()
-        self.data = self.db.sql_fetchall_records(JobListingMeta)
+        self.all_data = self.db.sql_fetchall_records(JobListingMeta)
         self.title_finder = TitleFinderStrategy()
         self.scrapeutils = ScrapeUtils()
 
@@ -151,7 +151,7 @@ class Crawl:
 
 
     def go_over_all_listings(self):
-        for data in self.data:
+        for data in self.all_data:
             stratgey_in_settings = self.title_finder.strategy_from_settings(data)
             if stratgey_in_settings:
                 self.find_title_using_existing_settings(data)
@@ -159,5 +159,21 @@ class Crawl:
 
             self.title_finder.strategy_finder(data)
 
-# CrawlPrepare().go_over_all_listings()
-print(CrawlPrepare().crawlogs)
+    def start_crawling(self, crawl_data_list):
+        if not crawl_data_list:
+            print("No crawl list provided")
+            exit()
+        crawlable_list = []
+        for data_dict in self.all_data:
+            if data_dict.get("url") in crawl_data_list:
+                crawlable_list.append(data_dict)
+        
+        print("\nCrawable list: ", crawlable_list, '\n')
+        for data in crawlable_list:
+            AddCrawlLogs().add_crawl_logs(data)
+            stratgey_in_settings = self.title_finder.strategy_from_settings(data)
+            if stratgey_in_settings:
+                self.find_title_using_existing_settings(data)
+                continue
+
+            self.title_finder.strategy_finder(data)
