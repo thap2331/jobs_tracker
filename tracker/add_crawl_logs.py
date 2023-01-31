@@ -6,17 +6,18 @@ from sqlalchemy.dialects.postgresql import insert
 from datetime import datetime, timedelta
 import pytz, argparse
 
-from database.db_manager import DBConnect
+from database.db_manager import DBConnect, Ingestion
 from database.data_models import Jobs, CrawlLogs, JobListingMeta
-from scraping.pipeline import Ingestion
-from database.data_models import CrawlLogs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--test_data', '-t', nargs='?', required=False, help='add test data')
 
 class AddCrawlLogs:
+    def __init__(self,) -> None:
+        self.db_connect = DBConnect()
+        self.ingestion = Ingestion()
 
-    def add_crawl_logs(self, data, time=None):
+    def pg_upsert_crawl_logs(self, data, time=None):
         url = data.get("url")
         if time:
             pst_timenow=time
@@ -28,16 +29,47 @@ class AddCrawlLogs:
         DBConnect().sql_execute_statement(stmt, values)
         return
 
+    def add_crawl_logs(self, data):
+        if not isinstance(data, dict) or not isinstance(data, list):
+            print(f"Data ({data}) is neither a dict nor a list.")
+        
+        #If data is a list
+        are_dict = True
+        if isinstance(data, list):
+            #all inside should be a dict
+            are_dict = all([isinstance(i, dict) for i in data])
+
+        if not are_dict:
+            print(f"All data inside a list ({data}) are not a dict.")
+            return
+
+        #If data is a dict
+        if isinstance(data, dict):
+            url = data.get("url")
+            last_attempted_crawl = data.get("last_attempted_crawl")
+            if not last_attempted_crawl:
+                data["last_attempted_crawl"]=datetime.now()
+            
+            data = [data]
+            print("data to be uploaded:",data)
+            print("tablename",CrawlLogs.__tablename__)
+
+        self.ingestion.insert_using_engine(CrawlLogs, data)
+        
+        return
+
+
     def add_test_data(self, data=None):
-        print("Adding test data")
+        print("Adding test data for crawl logs.")
+        
         #convert data and upload it if given - take a list of dict and loop and upload it
-        self.add_crawl_logs({"url":"url.com"}, time=self.get_pst_timenow())
+        self.add_crawl_logs({"url":"url1.com"})
 
         #two days ago
         utc_now = pytz.utc.localize(datetime.utcnow())
         now = utc_now.astimezone(pytz.timezone("US/Pacific"))
         pst_time_two_days_ago = now - timedelta(days=2)
-        self.add_crawl_logs({"url":"url2.com"},time=pst_time_two_days_ago)
+        self.add_crawl_logs({"url":"url2.com", "last_attempted_crawl":pst_time_two_days_ago})
 
         return
 

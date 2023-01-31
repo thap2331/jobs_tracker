@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# docker exec setup_box bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
 # echo check pgready from setup box container $?
 
 # pg_isready -p 5433 -d test_jt_db -h localhost -U postgres
 # echo check pgready from host $?
 
-pg_isready -p 5433 -d test_jt_db -h localhost -U postgres
+# pg_isready -p 5433 -d test_jt_db -h localhost -U postgres
+
+docker exec setup_box bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
 previous_success=$?
 echo "previous_success $previous_success"
 

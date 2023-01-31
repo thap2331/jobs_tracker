@@ -56,3 +56,7 @@ class CrawlLogs(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     url = Column(String)
     last_attempted_crawl = Column(DateTime, nullable = False)
+
+    def __init__(self, url, last_attempted_crawl):
+        self.url = url
+        self.last_attempted_crawl = last_attempted_crawl
