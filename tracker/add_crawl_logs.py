@@ -45,14 +45,10 @@ class AddCrawlLogs:
 
         #If data is a dict
         if isinstance(data, dict):
-            url = data.get("url")
-            last_attempted_crawl = data.get("last_attempted_crawl")
-            if not last_attempted_crawl:
+            if not data.get("last_attempted_crawl"):
                 data["last_attempted_crawl"]=datetime.now()
-            
+
             data = [data]
-            print("data to be uploaded:",data)
-            print("tablename",CrawlLogs.__tablename__)
 
         self.ingestion.insert_using_engine(CrawlLogs, data)
         

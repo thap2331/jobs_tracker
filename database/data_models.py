@@ -54,7 +54,7 @@ class CrawlLogs(Base):
 
     __tablename__ = 'crawlogs'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    url = Column(String)
+    url = Column(String, nullable = False)
     last_attempted_crawl = Column(DateTime, nullable = False)
 
     def __init__(self, url, last_attempted_crawl):
