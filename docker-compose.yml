@@ -1,8 +1,8 @@
 version: '3.9'
 
 services:
-  setup:
-    container_name: setup_box
+  prod_entrypoint:
+    container_name: prod_box
     build:
       context: .
       dockerfile: setup/Dockerfile.setup
@@ -10,6 +10,24 @@ services:
       run_mode: ${run_mode}
     volumes:
       - ./:/app
+    depends_on:
+      - database_prod
+    restart: on-failure
+    networks:
+      - jt_network
+
+  test_entrypoint:
+    container_name: test_box
+    build:
+      context: .
+      dockerfile: setup/Dockerfile.setup
+    environment:
+      run_mode: ${run_mode}
+    volumes:
+      - ./:/app
+    depends_on:
+      database_test:
+        condition: "service_healthy"
     restart: on-failure
     networks:
       - jt_network
@@ -43,6 +61,11 @@ services:
       - "5433:5432"
     networks:
       - jt_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d test_jt_db -p 5432 -h test_jt_pg_container"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   frontend:
     container_name: jt_frontend

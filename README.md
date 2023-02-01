@@ -64,7 +64,7 @@
 - ~~title with dash~~
 - ~~add a db for supported websites - not sure what I was thinking~~
 - ~~Allow email if not notified yet~~
-- Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl,
+- ~~Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl~~
 - Add cron job
   - To run crawl
   - To send emails
