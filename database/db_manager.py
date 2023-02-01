@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, '.')
 
 import os, psycopg2
-from sqlalchemy import update, inspect
+from sqlalchemy import update, inspect, insert as sqlalchemy_insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, select
 from sqlalchemy.dialects.postgresql import insert
@@ -116,8 +116,10 @@ class DBConnect:
 
 class Ingestion:
     def __init__(self) -> None:
+        self.conn_string = GetDBCreds().get_conn_string_sql_alchemy()
         self.db = DBConnect()
-
+        self.engine = create_engine(self.conn_string)
+    
     def ingest_data(self, data):
         if isinstance(data, list):
             for record in data:
@@ -129,3 +131,13 @@ class Ingestion:
         self.db.insert(data)
 
         return
+
+    def insert_using_engine(self, table, data):
+        try:
+            with self.engine.connect() as conn:
+                conn.execute(
+                    sqlalchemy_insert(table),
+                    data
+                    )
+        except Exception as e:
+            print(e)

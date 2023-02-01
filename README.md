@@ -30,7 +30,7 @@
 ##### Setup
 
 - Set up your environment `source setenv.sh test`
-- Run `docker compose up` . Wait till all services are up.
+- Run `docker compose up` . Wait till all services are up. You can also run selected service, e.g. to start database and setup box `docker compose up setup database_test`.
 - Now, run `setup/test_setup.sh` to create tables in your test database.
   This will also add a few sample rows.
   - Now go to [localhost:5000](http://localhost:5000/). You should see a page.

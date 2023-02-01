@@ -53,5 +53,10 @@ class JobListingMeta(Base):
 class CrawlLogs(Base):
 
     __tablename__ = 'crawlogs'
-    url = Column(String, primary_key = True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    url = Column(String, nullable = False)
     last_attempted_crawl = Column(DateTime, nullable = False)
+
+    def __init__(self, url, last_attempted_crawl):
+        self.url = url
+        self.last_attempted_crawl = last_attempted_crawl
