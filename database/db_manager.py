@@ -10,8 +10,6 @@ from sqlalchemy.dialects.postgresql import insert
 from database.db_configs import GetDBCreds
 from database.data_models import Jobs
 
-
-
 class DBConnect:
     def __init__(self) -> None:
         self.psycopg2_conn_string = GetDBCreds().get_conn_string_python_psycopg2()
@@ -141,3 +139,35 @@ class Ingestion:
                     )
         except Exception as e:
             print(e)
+
+    def insert_data(self, table, data):
+        dict_or_list = any([isinstance(data, dict), isinstance(data, list)])
+        
+        if dict_or_list is False:
+            print(f"Data ({data}) is neither a dict nor a list.")
+            return
+        
+        #If data is a list
+        are_dict = True
+        if isinstance(data, list):
+            #all inside should be a dict
+            are_dict = all([isinstance(i, dict) for i in data])
+
+        if not are_dict:
+            print(f"All data inside a list ({data}) are not a dict.")
+            return
+
+        #If data is a dict
+        if isinstance(data, dict):
+            data = [data]
+
+        try:
+            with self.engine.connect() as conn:
+                conn.execute(
+                    sqlalchemy_insert(table),
+                    data
+                    )
+        except Exception as e:
+            print(e)
+        
+        return

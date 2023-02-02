@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# echo check pgready from setup box container $?
-
-# pg_isready -p 5433 -d test_jt_db -h localhost -U postgres
-# echo check pgready from host $?
-
+# localbox
 # pg_isready -p 5433 -d test_jt_db -h localhost -U postgres
 
-docker exec setup_box bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
+docker exec test_box bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
 previous_success=$?
 echo "previous_success $previous_success"
 
@@ -23,11 +19,9 @@ then
 fi
 
 echo running: python database/initialize_database.py
-docker exec setup_box bash -c "python database/initialize_database.py"
+docker exec test_box bash -c "python database/initialize_database.py"
 
-echo running: docker exec setup_box bash -c "bash setup/test_setup_fill_data.sh"
-docker exec setup_box bash -c "bash setup/test_setup_fill_data.sh"
+echo running: docker exec test_box bash -c "bash setup/test_setup_fill_data.sh"
+docker exec test_box bash -c "bash setup/test_setup_fill_data.sh"
 
-# docker exec setup_box bash -c "bash setup/test_setup.sh"
-
-conn_string='host=test_jt_pg_container dbname=test_jt_db user=postgres password=pass port=5432'
+# conn_string='host=test_jt_pg_container dbname=test_jt_db user=postgres password=pass port=5432'

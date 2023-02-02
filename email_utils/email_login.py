@@ -51,5 +51,3 @@ class NotifyNewJobs:
 
             SendEmail().send_email(message)
             
-
-NotifyNewJobs().notify_new_jobs()

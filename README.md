@@ -15,38 +15,43 @@
 
 - Linux: Easy support in Linux boxes for now.
 - MacOS: To be tested
-- Windows: Get (git) bash on windows.
+- Windows: Get (git) bash on windows. To be tested.
 
 
 # Set up for a developer
 
 ### First time use
-  - `git clone [repo]`
+  - Get [Docker](https://docs.docker.com/get-docker/)
+    - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
+  - Clone repo `git clone [repo]`
   - Copy .env.example and create .env.dev file. 
     - `cp .env.example .env.dev`
     - Fill out `.env.dev` file as needed. Fill `run_mode=test`.
-  - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
 
-##### Setup
+##### Setup (only once to set database tables)
 
-- Set up your environment `source setenv.sh test`
-- Run `docker compose up` . Wait till all services are up. You can also run selected service, e.g. to start database and setup box `docker compose up setup database_test`.
-- Now, run `setup/test_setup.sh` to create tables in your test database.
+- Set up your test environment `source setenv.sh test`
+- Run `docker compose up [services]`. Example, for test database, test entry container, and frontend run `docker compose up database_test test_entrypoint frontend`. Wait till all services are up. Use `-d` to run in a detached mode.
+- Now, run `bash setup/test_setup.sh` to create tables in your test database.
   This will also add a few sample rows.
-  - Now go to [localhost:5000](http://localhost:5000/). You should see a page.
+  - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
+- To see more data, ensure that you have [psql (link for linux)](https://www.postgresql.org/download/linux/) and use [these commands](/setup/command_line_cmds.sh) as you line.
 
 ### Start crawling
 - Run crawl
-  - `docker exec -it setup_box bash -c "python scraping/crawl.py"`
+  - `docker exec -it test_box bash -c "python scraping/crawl.py -f all"`. See [argparse](/scraping/crawl.py) for more options.
 
 ### Shut down
-- Run `remove_container_images.sh` to remove all images, containers, volumes, and network.
-  - NOTE: It will delete all your data as it will take down all the volumes.
+- Run `docker compose down` to stop containers.
+- Run `bash remove_container_images.sh` to remove all images, containers, volumes, and network.
+  - NOTE: It will delete all your data because it will take down all the volumes.
 
+### How to run a cron job?
+- Go to [run_cron.sh](/run_cron.sh). At the end of the file you can see run cron jobs commands. Use and test as you wish.
 
 # Other
 
-### Supported Organizations
+### Supported Organizations on test env
 
 - texastribune
 - onx
@@ -64,16 +69,18 @@
 - ~~title with dash~~
 - ~~add a db for supported websites - not sure what I was thinking~~
 - ~~Allow email if not notified yet~~
-- Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl,
+- ~~Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl~~
 - Add cron job
-  - To run crawl
-  - To send emails
+  - ~~To run crawl in test mode~~
+  - ~~To send emails~~
+  - To run crawl in prod mode (for this work delete the repo and make readme as you set up for a prod.)
 - keep things in docker
   - ~~initialize test db~~
   - ~~allow crawl for test~~
   - ~~allow prod for frontend~~
   - ~~allow crawl for prod~~
-  - allow ability to run dead container and set up from there
+  - research on orphan docker containers
+  - Do not allow test container to spin up if the run mode is prod
 - Frontend
   - when trying to update we see: `This url already appears in another entry. Please enter a unique url.`
   - convert db connect in flask app to sqlalchmy
@@ -97,6 +104,7 @@
 - ~~add capability to be less verbose sqlite/~~
 - Tests
   - Unit tests
+- Keep tracker dirctory inside database folder
 
 - Bug
 -- progress bar has % sign at the end
@@ -104,6 +112,10 @@
 - Annoying things
 -- ~~sqlite verbose~~
 -- Add progress bar for pages scraped
+
+- Database work
+  - A column of cronjobs is written as `last_attempted_crawl`. Change this to `last_attempted` and then update it wherever it get impacted.
+
 
 # Planned feature extension
 

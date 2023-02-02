@@ -99,17 +99,6 @@ class TitleFinderStrategy:
                     break
             sys.stdout.write(f'\r{n+1} of {len(all_urls)} completed.')
             sys.stdout.flush()
-
-
-class CrawlPrepare:
-
-    def __init__(self) -> None:
-        self.db = DBConnect()
-        self.cond = CrawlLogs.last_attempted_crawl
-        utc_now = pytz.utc.localize(datetime.utcnow())
-        self.now = utc_now.astimezone(pytz.timezone("US/Pacific"))
-        self.crawlogs = self.db.sql_fetchall_records(CrawlLogs, [{"colname":self.cond, "operator":"le", "value":self.now}])
-
     
 class Crawl:
 

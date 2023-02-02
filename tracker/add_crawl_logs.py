@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import pytz, argparse
 
 from database.db_manager import DBConnect, Ingestion
-from database.data_models import Jobs, CrawlLogs, JobListingMeta
+from database.data_models import Jobs, CrawlLogs, CronLogs, JobListingMeta
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--test_data', '-t', nargs='?', required=False, help='add test data')
@@ -30,8 +30,11 @@ class AddCrawlLogs:
         return
 
     def add_crawl_logs(self, data):
-        if not isinstance(data, dict) or not isinstance(data, list):
+        dict_or_list = any([isinstance(data, dict), isinstance(data, list)])
+        
+        if dict_or_list is False:
             print(f"Data ({data}) is neither a dict nor a list.")
+            return
         
         #If data is a list
         are_dict = True
@@ -74,6 +77,40 @@ class AddCrawlLogs:
         timenow = utc_now.astimezone(pytz.timezone("US/Pacific"))
 
         return timenow
+
+class AddCronLogs:
+
+    def __init__(self,) -> None:
+        self.ingestion = Ingestion()
+
+    def add_cron_logs(self, data):
+        dict_or_list = any([isinstance(data, dict), isinstance(data, list)])
+        
+        if dict_or_list is False:
+            print(f"Data ({data}) is neither a dict nor a list.")
+            return
+        
+        #If data is a list
+        are_dict = True
+        if isinstance(data, list):
+            #all inside should be a dict
+            are_dict = all([isinstance(i, dict) for i in data])
+
+        if not are_dict:
+            print(f"All data inside a list ({data}) are not a dict.")
+            return
+
+        #If data is a dict
+        if isinstance(data, dict):
+            if not data.get("last_attempted_crawl"):
+                data["last_attempted_crawl"]=datetime.now()
+
+            data = [data]
+
+        self.ingestion.insert_using_engine(CronLogs, data)
+        
+        return
+
 
 if __name__ == "__main__":
     args = parser.parse_args()

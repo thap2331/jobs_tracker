@@ -50,6 +50,14 @@ class JobListingMeta(Base):
         self.render                 = render
 
 
+class CronLogs(Base):
+
+    __tablename__ = 'cronlogs'
+    id                      = Column(Integer, primary_key=True, autoincrement=True)
+    info                    = Column(String)
+    last_attempted_crawl    = Column(DateTime, nullable = False)
+
+
 class CrawlLogs(Base):
 
     __tablename__ = 'crawlogs'

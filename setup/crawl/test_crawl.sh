@@ -1,10 +1,25 @@
 #!/bin/bash
 
-readonly SLEEP_TIME=5
+if [[ $# -ne 1 ]]; then
+    echo "No argument provided. Please provide dup or up"
+    exit
+fi
 
-until timeout 3 pg_isready -p 5433 -d test_jt_db -h localhost -U postgres 
-do
-  printf "Waiting %s seconds for PostgreSQL to come up.\n" $SLEEP_TIME
-  sleep $SLEEP_TIME;
-done
+if [[ $1 == "dup" ]]; then
+    # Fresh crawl with compose down and up
+    docker compose down
+    docker compose up database_test test_entrypoint -d
 
+    docker exec test_box bash -c "python scraping/crawl.py -c r"
+    docker compose down
+
+elif [[ $1 == "up" ]]; then
+    docker compose up database_test test_entrypoint -d
+    docker exec test_box bash -c "python scraping/crawl.py -c r"
+
+elif [[ $1 == "jr" ]]; then
+    docker exec test_box bash -c "python scraping/crawl.py -c r"
+
+elif [[ $1 == "dtup" ]]; then
+    docker compose up database_test test_entrypoint -d
+fi

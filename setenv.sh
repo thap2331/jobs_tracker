@@ -25,6 +25,3 @@ fi
 
 set +o allexport
 set +a
-
-# set +o allexport
-# set +a
