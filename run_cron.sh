@@ -1,10 +1,11 @@
 #!/bin/bash
 
-
+#Figure out how to cd to relative path; need to delete this absolute strategy
 cd /home/suraj/personal_projects/jobs_tracker/
 source setenv.sh test
 bash setup/crawl/test_crawl.sh dup
 
+#Cron jobs
 #Test crawl
 # (crontab -l ; echo "0 * * * * /home/suraj/personal_projects/jobs_tracker/run_cron.sh #testcrawl") | sort - | uniq - | crontab -
 # (crontab -l ; echo "0,5,10,15,20,25,30,35,40,45,50,52,55 * * * * /home/suraj/personal_projects/jobs_tracker/run_cron.sh >> /home/suraj/personal_projects/jobs_tracker/test_crawl.log 2>&1 #testcrawl") | sort - | uniq - | crontab -
