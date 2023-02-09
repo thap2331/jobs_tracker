@@ -154,3 +154,7 @@ td.options-col {
     justify-content: space-evenly;
     align-items: center;
 }
+
+#cronjobs-list tr:not(.table-header) {
+    border-bottom: 2px solid black;
+}

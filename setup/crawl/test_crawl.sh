@@ -1,6 +1,12 @@
 #!/bin/bash
 
-if [[ $# -ne 1 ]]; then
+#Figure out how to cd to relative path; need to delete this absolute strategy
+
+# cd /home/suraj/personal_projects/jobs_tracker/
+cd $2
+source setenv.sh test
+
+if [[ $# -ne 2 ]]; then
     echo "No argument provided. Please provide dup or up"
     exit
 fi

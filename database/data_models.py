@@ -68,3 +68,15 @@ class CrawlLogs(Base):
     def __init__(self, url, last_attempted_crawl):
         self.url = url
         self.last_attempted_crawl = last_attempted_crawl
+
+class CronJobsList(Base):
+
+    __tablename__       = 'cronjobslist'
+    id                  = Column(Integer, primary_key=True, autoincrement=True)
+    absolute_path       = Column(String, nullable = False)
+    jobtype             = Column(String, nullable = False, default="crawl") #defult crawl  #give frontend options email or crawl
+    cronjob             = Column(String, nullable=False, default="0 * * * *") #depending on job type, default hours
+    cronid              = Column(String, nullable = False) # autogenerate jobtype_plus_random_digit_4_word_letter #if jobtype none, the crawl_plus_random
+    boxtype             = Column(String, default='linux')    # in future option of linux, mac, windows, #default
+    fullcronjob         = Column(String) #once built, just put in db for now
+    delete_fullcronjob  = Column(String)

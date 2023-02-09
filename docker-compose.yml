@@ -73,7 +73,9 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     volumes:
-      - ./:/app
+      - ./frontend:/app/frontend
+      - ./database:/app/frontend/database
+      - ./utils:/app/frontend/utils
       - jt_pg_vol_prod:/var/lib/postgresql/data
       - jt_pg_vol_test:/var/lib/postgresql/data
     restart: on-failure
