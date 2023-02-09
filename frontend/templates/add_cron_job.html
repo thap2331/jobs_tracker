@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id = 'main-title-container'>
+    <h1 id = 'main-title'>Add New Cron Job</h1>
+</div>
+{% for message in get_flashed_messages() %}
+<div class="alert">{{ message }}</div>
+{% endfor %}
+<form method="post" class="new-update-form">
+    <label for="absolute_path">Absolute Path <span class='optional'>(optional)</span></label>
+    <input type="text" name="absolute_path" value="{{ request.form['absolute_path'] }}"></input>
+
+    <label for="jobtype">Job Type </label>
+    <input name="jobtype" value="{{ request.form['jobtype'] }}"></input>
+
+    <label for="cronjob">Cron Job </label>
+    <input name="cronjob" value="{{ request.form['cronjob'] }}"></input>
+
+    <label for="cronid">Cron Id <span class='optional'>(optional)</span></label>
+    <input name="cronid" value="{{ request.form['cronid'] }}"></input>
+
+    <label for="boxtype">Box Type </label>
+    <input name="boxtype" value="{{ request.form['boxtype'] }}"></input>
+
+    <label for="fullcronjob">Full Cron Job </label>
+    <input name="fullcronjob" value="{{ request.form['fullcronjob'] }}"></input>
+
+    <label for="fullcronjob">Remove Cron Job </label>
+    <input name="fullcronjob" value="{{ request.form['delete_fullcronjob'] }}"></input>
+
+    <button type="submit" class="submit-button">Submit</button>
+</form>
+{% endblock %}
+

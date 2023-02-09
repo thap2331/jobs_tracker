@@ -24,14 +24,14 @@
   - Get [Docker](https://docs.docker.com/get-docker/)
     - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
   - Clone repo `git clone [repo]`
-  - Copy .env.example and create .env.dev file. 
-    - `cp .env.example .env.dev`
+  - Copy `.env.example` and create `.env.dev` file. 
+    - Do `cp .env.example .env.dev`
     - Fill out `.env.dev` file as needed. Fill `run_mode=test`.
 
-##### Setup (only once to set database tables)
+### One time Setup (only once to set database tables)
 
 - Set up your test environment `source setenv.sh test`
-- Run `docker compose up [services]`. Example, for test database, test entry container, and frontend run `docker compose up database_test test_entrypoint frontend`. Wait till all services are up. Use `-d` to run in a detached mode.
+- Run `docker compose up [services]`. Example, for test database, test entry container, and frontend run `docker compose up database_test test_entrypoint frontend` . Wait till all services are up. Use `-d` to run in a detached mode.
 - Now, run `bash setup/test_setup.sh` to create tables in your test database.
   This will also add a few sample rows.
   - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
@@ -48,6 +48,7 @@
 
 ### How to run a cron job?
 - Go to [run_cron.sh](/run_cron.sh). At the end of the file you can see run cron jobs commands. Use and test as you wish.
+- Update file path in [crawl cron job](/setup/crawl/test_crawl.sh) and [email cron jobs](/setup/email/email_jobs.sh).
 
 # Other
 
@@ -74,16 +75,31 @@
   - ~~To run crawl in test mode~~
   - ~~To send emails~~
   - To run crawl in prod mode (for this work delete the repo and make readme as you set up for a prod.)
+  - How to use relative links for a cron job
 - keep things in docker
   - ~~initialize test db~~
   - ~~allow crawl for test~~
   - ~~allow prod for frontend~~
   - ~~allow crawl for prod~~
+  - use frontend for adding cron jobs
   - research on orphan docker containers
   - Do not allow test container to spin up if the run mode is prod
 - Frontend
   - when trying to update we see: `This url already appears in another entry. Please enter a unique url.`
   - convert db connect in flask app to sqlalchmy
+  - cron job
+    - crawl cron job
+      - we need (1) full path of the folder
+      - everything else is default (run crawl job, time it runs - every hour, linux)
+      - once submitted, 
+        - add cron job in your box
+        - store in a database (seperate by space); do not allow to add more unless deleted
+    - email cron job
+      - we need (1) full path of the folder
+      - everything else is default (run email job, time it runs - every hour, linux)
+      - once submitted, store in a database (seperate by space); do not allow to add more unless deleted
+  - delete db configs file and use file from outside
+
 - Fill out test env including dummy data for all tables
 - Crawling
   - Add option to crawl all job listings or few selected job listings
@@ -115,6 +131,7 @@
 
 - Database work
   - A column of cronjobs is written as `last_attempted_crawl`. Change this to `last_attempted` and then update it wherever it get impacted.
+  - work with database from one place only, i.e., interact with it using one class
 
 
 # Planned feature extension
@@ -127,7 +144,7 @@
 
 ### Personal motivation
 
-- In addition to the above annoyance about checking jobs everyday, I wanted to use bash as much as possible in this project (just for learning purposes). I am not against other language ideas.
+- In addition to the above annoyance about checking jobs everyday, this project was because it gave me opportunites to learn/use bash.
 
 ### Scraping strategy
 
@@ -138,8 +155,6 @@
 
 - validate url
 - url normalizer
--
-
 
 ### Email config
 - https://realpython.com/python-send-email/

@@ -5,8 +5,11 @@ from flask import Flask, render_template, request, url_for, redirect, flash
 from psycopg2.extras import RealDictCursor
 import sqlite3, psycopg2, os, time, subprocess, json
 
-print(os.getenv("run_mode"))
-from frontend_db_configs import GetDBCreds
+from database.db_configs import GetDBCreds
+from database.db_manager import DBConnect
+import datetime
+from utils.utils import DateTimeUtils
+from build_cron_job import BuildCron
 
 conn_string = GetDBCreds().get_conn_string_python_psycopg2()
 
@@ -32,10 +35,10 @@ def get_search_row(link):
 
 
 # Get results row
-def get_results_row(link):
+def get_rows(table, column, values):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM jobs WHERE job_link = %s', (link,))
+    cursor.execute(f'SELECT * FROM {table} WHERE {column} = %s', values)
     row = cursor.fetchone()
     conn.close()
     return row
@@ -51,9 +54,39 @@ def index():
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM jobs')
     resultsTableData = cursor.fetchall()
+
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM cronjobslist')
+    cronJobListData = cursor.fetchall()
+
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM cronlogs')
+    cronlogsData = cursor.fetchall()
+    if cronlogsData:
+        for row in cronlogsData:
+            print(row.get("last_attempted_crawl"), type(row.get("last_attempted_crawl")))
+            last_attempted_crawl = row.get("last_attempted_crawl")
+            if isinstance(last_attempted_crawl, datetime.datetime):
+                row["last_attempted_crawl"] = DateTimeUtils().convert_utc_to_pst(row.get("last_attempted_crawl"))
+    
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM crawlogs')
+    crawledData = cursor.fetchall()
+    if crawledData:
+        for row in crawledData:
+            last_attempted_crawl = row.get("last_attempted_crawl")
+            if isinstance(last_attempted_crawl, datetime.datetime):
+                row["last_attempted_crawl"] = DateTimeUtils().convert_utc_to_pst(row.get("last_attempted_crawl"))
     
     conn.close()
-    return render_template('index.html', searchTableData = searchTableData, resultsTableData = resultsTableData)
+    return render_template(
+        'index.html',
+        searchTableData = searchTableData, 
+        resultsTableData = resultsTableData,
+        cronJobListData = cronJobListData,
+        cronlogsData = cronlogsData,
+        crawledData = crawledData
+        )
 
 
 # Add new search row
@@ -129,6 +162,10 @@ def delete():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM joblisting WHERE url = %s', (request.form['link'],))
+    elif del_type == "cronjobslist":
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM cronjobslist WHERE cronid = %s', (request.form['cronid'],))
     else:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -137,3 +174,37 @@ def delete():
     conn.commit()
     conn.close()
     return redirect(url_for('index'))
+
+# Add new search row
+@app.route('/add_cronjob', methods=('GET', 'POST'))
+def add_cronjob():
+    exists=False
+    if request.method == 'POST':
+        exists = get_rows('cronjobslist', 'cronid', (request.form['cronid'],))
+
+        absolute_path   = request.form['absolute_path']
+        jobtype         = request.form['jobtype']
+        cronjob         = request.form['cronjob']
+        cronid          = request.form['cronid']
+        boxtype         = request.form['boxtype']
+        fullcronjob     = request.form['fullcronjob']
+
+        if exists:
+            flash("The url already exists in the database. If you would like to alter information for this entry, use the update option.")
+        elif not absolute_path:
+            flash('Absolute Path is required!')
+        else:
+            BuildCron().given_cols(
+                absolute_path=absolute_path,
+                jobtype=jobtype,
+                cronjob=cronjob,
+                cronid=cronid,
+                boxtype=boxtype,
+                fullcronjob=fullcronjob
+                )
+
+    return render_template('add_cron_job.html')
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)

@@ -9,6 +9,9 @@
 <div class = 'tabs'>
     <button class="tab-button active" onClick="openTab(event, 'scraping-list')">Scraping List</button>
     <button class="tab-button" onClick="openTab(event, 'results-list')">Results List</button>
+    <button class="tab-button" onClick="openTab(event, 'cronjobs-list')">Cron jobs List</button>
+    <button class="tab-button" onClick="openTab(event, 'cronlogs-list')">Cron Logs List</button>
+    <button class="tab-button" onClick="openTab(event, 'crawedlogs-list')">Crawled List</button>
 </div>
         
 <!-- Create tab content -->
@@ -74,4 +77,84 @@
     {% endfor %}
     </table>
 </div>
+
+<div id="cronjobs-list" class="tab-content">
+    <table id="cronjobs-list-table">
+        <tr class="table-header">
+            <th>Absolute path</th>
+            <th>Job type</th>
+            <th>Cron job</th>
+            <th>Cron id</th>
+            <th>Box type</th>
+            <th>Fullcronjob</th>
+            <th>Remove cronjob</th>
+            <th>Options</th>
+        </tr>
+        {% for row in cronJobListData %}
+            <tr>
+                <td>{{ row['absolute_path'] }}</td>
+                <td>{{ row['jobtype'] }}</td>
+                <td>{{ row['cronjob'] }}</td>
+                <td>{{ row['cronid'] }}</td>
+                <td>{{ row['boxtype'] }}</td>
+                <td><code>{{ row['fullcronjob'] }}</code></td>
+                <td><code>{{ row['delete_fullcronjob'] }}</code></td>
+                <td class="options-col">
+                    <form action="/update" method="POST" class="inline-form">
+                        <input style = 'display:none;' value = "{{ row['url'] }}" name = 'link'>
+                        <button class="update-button">Update</button>
+                    </form>
+                    <form action="/delete" method="POST" class="inline-form">
+                        <input type="submit" value="Delete" class = "del-button"
+                        onclick="return confirm('Are you sure you want to delete this entry?')">
+                        <input style = 'display:none;' value = "{{ row['cronid'] }}" name = 'cronid'>
+                        <input style = 'display:none;' value = "cronjobslist" name = 'del_type'>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <form action="/add_cronjob" class="add-button-form">
+        <button class="add-button">Add New Cronjob Entry</button>
+        <div class="spacer" style="clear: both;"></div>
+    </form>
+</div>
+
+<div id="cronlogs-list" class="tab-content">
+    <table id="cronlogs-list-table">
+        <tr class="table-header">
+            <th>S.N.</th>
+            <th>Info</th>
+            <th>last_attempted_crawl</th>
+        </tr>
+        {% for row in cronlogsData %}
+            <tr>
+                <td>{{ row['id'] }}</td>
+                <td>{{ row['info'] }}</td>
+                <td>{{ row['last_attempted_crawl'] }}</td>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+<div id="crawedlogs-list" class="tab-content">
+    <table id="crawedlogs-list-table">
+        <tr class="table-header">
+            <th>S.N.</th>
+            <th>Url</th>
+            <th>last_attempted_crawl</th>
+        </tr>
+        {% for row in crawledData %}
+            <tr>
+                <td>{{ row['id'] }}</td>
+                <td>{{ row['url'] }}</td>
+                <td>{{ row['last_attempted_crawl'] }}</td>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
 {% endblock %}
