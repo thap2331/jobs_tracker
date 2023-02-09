@@ -187,24 +187,22 @@ def add_cronjob():
         cronjob         = request.form['cronjob']
         cronid          = request.form['cronid']
         boxtype         = request.form['boxtype']
-        fullcronjob     = request.form['fullcronjob']
+        # fullcronjob     = request.form['fullcronjob']
 
         if exists:
             flash("The url already exists in the database. If you would like to alter information for this entry, use the update option.")
         elif not absolute_path:
             flash('Absolute Path is required!')
         else:
-            BuildCron().given_cols(
+            BuildCron().build_cron_job_commands(
                 absolute_path=absolute_path,
                 jobtype=jobtype,
                 cronjob=cronjob,
                 cronid=cronid,
-                boxtype=boxtype,
-                fullcronjob=fullcronjob
+                boxtype=boxtype
                 )
 
     return render_template('add_cron_job.html')
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
