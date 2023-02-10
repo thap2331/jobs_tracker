@@ -11,7 +11,7 @@
     <button class="tab-button" onClick="openTab(event, 'results-list')">Results List</button>
     <button class="tab-button" onClick="openTab(event, 'cronlogs-list')">Cron Logs List</button>
     <button class="tab-button" onClick="openTab(event, 'crawedlogs-list')">Crawled List</button>
-    <button class="tab-button" onClick="openTab(event, 'cronjobs-list')">Cron jobs Generator</button>
+    <button class="tab-button" onClick="openTab(event, 'cronjobs-list')">Cron Jobs Generator</button>
 </div>
         
 <!-- Create tab content -->
@@ -123,9 +123,9 @@
 <div id="cronlogs-list" class="tab-content">
     <table id="cronlogs-list-table">
         <tr class="table-header">
-            <th>S.N.</th>
+            <th>Id</th>
             <th>Info</th>
-            <th>last_attempted_crawl</th>
+            <th>Last attempted</th>
         </tr>
         {% for row in cronlogsData %}
             <tr>
@@ -144,7 +144,7 @@
         <tr class="table-header">
             <th>S.N.</th>
             <th>Url</th>
-            <th>last_attempted_crawl</th>
+            <th>Last attempted crawl</th>
         </tr>
         {% for row in crawledData %}
             <tr>

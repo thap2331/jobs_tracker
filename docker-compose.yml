@@ -11,7 +11,7 @@ services:
     volumes:
       - ./:/app
     depends_on:
-      - database_prod
+      - prod_database
     restart: on-failure
     networks:
       - jt_network
@@ -26,13 +26,13 @@ services:
     volumes:
       - ./:/app
     depends_on:
-      database_test:
+      test_database:
         condition: "service_healthy"
     restart: on-failure
     networks:
       - jt_network
 
-  database_prod:
+  prod_database:
     container_name: jt_pg_container
     image: postgres:14.6
     restart: always
@@ -47,7 +47,7 @@ services:
     networks:
       - jt_network
 
-  database_test:
+  test_database:
     container_name: test_jt_pg_container
     image: postgres:14.6
     restart: always

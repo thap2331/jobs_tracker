@@ -10,7 +10,7 @@ class BuildCron:
     def __init__(self):
         self.run_mode = GetDBCreds().get_runmode()
 
-    def given_cols(self, **kwargs):
+    def build_cron_job_commands(self, **kwargs):
         absolute_path   = kwargs.get("absolute_path")
         jobtype         = kwargs.get("jobtype")
         cronjob         = kwargs.get("cronjob")
@@ -28,13 +28,13 @@ class BuildCron:
         if not boxtype:
             boxtype = "linux"
         
-        if self.run_mode == "test":
-            if jobtype == "crawl":
-                fullcronjob = f'(crontab -l ; echo "{cronjob} {absolute_path}/setup/crawl/test_crawl.sh dup {absolute_path} >> {absolute_path}/test_crawl_cronjob.log 2>&1 #{cronid}") | sort - | uniq - | crontab -'
-                delete_fullcronjob = f'crontab -l | grep -v "#{cronid}" | crontab'
+        if jobtype == "crawl":
+            fullcronjob = f'(crontab -l ; echo "{cronjob} {absolute_path}/setup/crawl/crawl_jobs.sh {self.run_mode} {absolute_path}  dup >> {absolute_path}/{self.run_mode}_crawl_cronjob.log 2>&1 #{cronid}") | sort - | uniq - | crontab -'
+            delete_fullcronjob = f'crontab -l | grep -v "#{cronid}" | crontab'
 
-            if jobtype == "email":
-                pass
+        if jobtype == "email":
+            fullcronjob = f'(crontab -l ; echo "{cronjob} {absolute_path}/setup/email/email_jobs.sh {absolute_path} {self.run_mode} >> {absolute_path}/{self.run_mode}_email_cronjob.log 2>&1 #{cronid}") | sort - | uniq - | crontab -'
+            delete_fullcronjob = f'crontab -l | grep -v "#{cronid}" | crontab'
     
         data = {
             "absolute_path":absolute_path,
