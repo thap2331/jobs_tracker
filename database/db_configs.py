@@ -1,4 +1,5 @@
 import os
+from dotenv import dotenv_values
 
 class GetDBCreds:
     def __init__(self):
@@ -23,6 +24,20 @@ class GetDBCreds:
             my_run_mode = "test"
 
         return my_run_mode
+
+    def get_absolute_path(self):
+
+        # if self.get_runmode() == "test":
+        #     config = dotenv_values(".env.dev")
+
+        # if self.get_runmode() == "prod":
+        #     config = dotenv_values(".env")
+
+        # absolute_path = config.get("absolute_path")
+
+        absolute_path = os.getenv("absolute_path")
+
+        return absolute_path
 
     def get_creds_json(self):
         if self.run_mode == "prod":

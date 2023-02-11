@@ -83,6 +83,7 @@ services:
       - '5000:5000'
     environment:
       run_mode: ${run_mode}
+      absolute_path: ${absolute_path}
     networks:
       - jt_network
 

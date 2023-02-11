@@ -11,7 +11,8 @@ import datetime
 from utils.utils import DateTimeUtils
 from build_cron_job import BuildCron
 
-conn_string = GetDBCreds().get_conn_string_python_psycopg2()
+conn_string             = GetDBCreds().get_conn_string_python_psycopg2()
+absolute_path_from_env  = GetDBCreds().get_absolute_path()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '6d1209d285f8030865a7faac38ec5b5e4c5d11fa994f0854'
@@ -180,25 +181,24 @@ def delete():
 def add_cronjob():
     exists=False
     if request.method == 'POST':
-        exists = get_rows('cronjobslist', 'cronid', (request.form['cronid'],))
 
         absolute_path   = request.form['absolute_path']
         jobtype         = request.form['jobtype']
         cronjob         = request.form['cronjob']
-        cronid          = request.form['cronid']
         boxtype         = request.form['boxtype']
-        # fullcronjob     = request.form['fullcronjob']
+
+        if not absolute_path:
+            absolute_path = absolute_path_from_env
 
         if exists:
             flash("The url already exists in the database. If you would like to alter information for this entry, use the update option.")
         elif not absolute_path:
-            flash('Absolute Path is required!')
+            flash(f'Absolute Path is required! Either put it in env file or fill it in.')
         else:
             BuildCron().build_cron_job_commands(
                 absolute_path=absolute_path,
                 jobtype=jobtype,
                 cronjob=cronjob,
-                cronid=cronid,
                 boxtype=boxtype
                 )
 

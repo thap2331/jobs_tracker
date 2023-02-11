@@ -11,6 +11,57 @@
 - Set up your email and cron job. Then, you are done. (Well, thats the plan.)
 - Add companies you want. If the companies are not listed, extend it yourself and contribute to this project.
 
+## Setup
+
+-   For developer's see this [developer's readme.](/developer_readme.md)
+
+### First time use
+- Get [Docker](https://docs.docker.com/get-docker/)
+    - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
+- Clone repo `git clone [repo]`
+- Go to jobs tracker directory, i.e. use command line and cd into it.
+- Copy `.env.example` and create `.env` file. 
+    - Run command: `cp .env.example .env`
+    - Fill out rest of `.env` file as needed
+        - Fill your `email` and `onePasswordEmail` if you want to send email from yourself.
+
+### One time Setup (only once to set database tables)
+- Go to jobs tracker directory, i.e. use command line and cd into it.
+- To find current work directory and save in `.env` file, do below:
+    - Find full path. Use `pwd` in bash/zsh. Copy and paste it in `.env` file as `absolute_path=paste_path_here`.
+- Run `docker compose up prod_database -d`.   
+- Now, run `bash setup/prod_setup.sh` to create tables in your database.
+  This will also add a few sample rows.
+  - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
+- To see more data, ensure that you have [psql (link for linux)](https://www.postgresql.org/download/linux/) and use [these commands](/setup/command_line_cmds.sh) as you like.
+
+### Start crawling
+- Run crawl
+    - For entry container and frontend, run `docker compose up prod_entrypoint frontend -d` .
+  - Wait for it to be done. Then run `docker exec -it prod_box bash -c "python scraping/crawl.py -f all"`. See [argparse](/scraping/crawl.py) for more options.
+
+
+### Setup cron jobs
+- Use frontend to generate command line code for cron jobs
+    - Run `docker compose up prod_database frontend -d`
+    - Go to `localhost:5000`
+    - Go to tab `Cron Jobs Generator`. Select `Add New Cronjob Entry`.
+    - Rows to fill
+        - Absolute Path
+            - Check your `.env` file. Here you can add `absolute_path=` if it is not there yet.
+            - Alternatively, you can manually find the repo path and add it there.
+        - Job type
+            - Default crawl. You can also add email option.
+        - Cron Job
+            - Go to https://crontab.guru/ and copy paste.
+        - Box Type
+            - Default is linux. Others are yet to be tested. Godspeed.
+    - Hit submit. If you have absolute path in your env file, you can just hit submit if are ok with default options.
+- Copy `Fullcronjob` command and paste it in your bash command line. Use `crontab -l` to see all cron jobs.
+- Remove a cron jon. Copy `Remove cronjob` command and paste it in your bash command line. Use `crontab -l` to see all cron jobs.
+    
+
+
 ### Supported OS system
 
 - Linux: Easy support in Linux boxes for now.
@@ -18,145 +69,10 @@
 - Windows: Get (git) bash on windows. To be tested.
 
 
-# Set up for a developer
-
-### First time use
-  - Get [Docker](https://docs.docker.com/get-docker/)
-    - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
-  - Clone repo `git clone [repo]`
-  - Copy `.env.example` and create `.env.dev` file. 
-    - Do `cp .env.example .env.dev`
-    - Fill out `.env.dev` file as needed. Fill `run_mode=test`.
-
-### One time Setup (only once to set database tables)
-
-- Set up your test environment `source setenv.sh test`
-- Run `docker compose up [services]`. Example, for test database, test entry container, and frontend run `docker compose up database_test test_entrypoint frontend` . Wait till all services are up. Use `-d` to run in a detached mode.
-- Now, run `bash setup/test_setup.sh` to create tables in your test database.
-  This will also add a few sample rows.
-  - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
-- To see more data, ensure that you have [psql (link for linux)](https://www.postgresql.org/download/linux/) and use [these commands](/setup/command_line_cmds.sh) as you line.
-
-### Start crawling
-- Run crawl
-  - `docker exec -it test_box bash -c "python scraping/crawl.py -f all"`. See [argparse](/scraping/crawl.py) for more options.
-
-### Shut down
-- Run `docker compose down` to stop containers.
-- Run `bash remove_container_images.sh` to remove all images, containers, volumes, and network.
-  - NOTE: It will delete all your data because it will take down all the volumes.
-
-### How to run a cron job?
-- Go to [run_cron.sh](/run_cron.sh). At the end of the file you can see run cron jobs commands. Use and test as you wish.
-- Update file path in [crawl cron job](/setup/crawl/test_crawl.sh) and [email cron jobs](/setup/email/email_jobs.sh).
-
-# Other
-
-### Supported Organizations on test env
-
-- texastribune
-- onx
-
-### Things to do next (order by priority)
-
-- ~~Pull settings from database for crawler~~
-- ~~Url join~~
-- ~~Front-end~~
-- ~~Add do not follow these links such as .pdf~~
-- ~~Add email method~~
-- ~~request to add your email and one pass~~
-- ~~add render in config~~
-- ~~allow ability to recrawl without restarting~~
-- ~~title with dash~~
-- ~~add a db for supported websites - not sure what I was thinking~~
-- ~~Allow email if not notified yet~~
-- ~~Add to crawl logs when crawl runs, columns: jl, last_attempted_crawl~~
-- Add cron job
-  - ~~To run crawl in test mode~~
-  - ~~To send emails~~
-  - To run crawl in prod mode (for this work delete the repo and make readme as you set up for a prod.)
-  - How to use relative links for a cron job
-- keep things in docker
-  - ~~initialize test db~~
-  - ~~allow crawl for test~~
-  - ~~allow prod for frontend~~
-  - ~~allow crawl for prod~~
-  - use frontend for adding cron jobs
-  - research on orphan docker containers
-  - Do not allow test container to spin up if the run mode is prod
-- Frontend
-  - when trying to update we see: `This url already appears in another entry. Please enter a unique url.`
-  - convert db connect in flask app to sqlalchmy
-  - cron job
-    - crawl cron job
-      - we need (1) full path of the folder
-      - everything else is default (run crawl job, time it runs - every hour, linux)
-      - once submitted, 
-        - add cron job in your box
-        - store in a database (seperate by space); do not allow to add more unless deleted
-    - email cron job
-      - we need (1) full path of the folder
-      - everything else is default (run email job, time it runs - every hour, linux)
-      - once submitted, store in a database (seperate by space); do not allow to add more unless deleted
-  - delete db configs file and use file from outside
-
-- Fill out test env including dummy data for all tables
-- Crawling
-  - Add option to crawl all job listings or few selected job listings
-  - Allow crawling to select a few job listings
-  - Allow crawling if not crawled in last 24 hours
-  - Allow crawl logs to have when a website was crawled
-  - allow crawl for all by catching exception and logging them
-  - for add job listing, allow capability to add job posting or view job listing to be added, check for duplicates
-  - crawl logs with capability to say how many new jobs found
-  - Optimize crawers
-    - Optimze the crawlers
-- Crawling strategy
-  - think about pagination - pagination in url param + pagination in
-  - see if title is in the headings
-  - allow ability to load jobs from past and skip seen jobs
-  - Tighten render: always render and return markup. First, request html and then selenium render.
-  - ~~allow render for job posting pages as well~~
-- ~~add capability to be less verbose sqlite/~~
-- Tests
-  - Unit tests
-- Keep tracker dirctory inside database folder
-
-- Bug
--- progress bar has % sign at the end
-
-- Annoying things
--- ~~sqlite verbose~~
--- Add progress bar for pages scraped
-
-- Database work
-  - A column of cronjobs is written as `last_attempted_crawl`. Change this to `last_attempted` and then update it wherever it get impacted.
-  - work with database from one place only, i.e., interact with it using one class
-
-
-# Planned feature extension
-
-- ~~Allow Postgres and SQLite option (or more as needed)~~
-- ~~Add front end functionality to add job websites to database~~
-- ~~Use containerized services~~
-- Use scrapy and handle data pipeline through scrapy pipeline
-- Create a table with a organization's website, its name, jobs website, ats if exists.
-
-### Personal motivation
-
-- In addition to the above annoyance about checking jobs everyday, this project was because it gave me opportunites to learn/use bash.
-
-### Scraping strategy
-
-- check for settings, see if title in link, page title, and then in page
-- if no settings keep strategy of going through all three strategy
-
-### Tests need to be added
-
-- validate url
-- url normalizer
-
 ### Email config
 - https://realpython.com/python-send-email/
 - https://stackoverflow.com/questions/73026671/how-do-i-now-since-june-2022-send-an-email-via-gmail-using-a-python-script
 - https://stackoverflow.com/questions/72478573/how-to-send-an-email-using-python-after-googles-policy-update-on-not-allowing-j
+
+### Developer's readme
+For developer's see this [developer's readme.](/developer_readme.md)

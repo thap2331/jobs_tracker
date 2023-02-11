@@ -6,9 +6,11 @@ from database.data_models import CronJobsList
 from database.db_configs import GetDBCreds
 from database.db_manager import Ingestion
 
+#Keep this in utils
+
 class BuildCron:
     def __init__(self):
-        self.run_mode = GetDBCreds().get_runmode()
+        self.run_mode               = GetDBCreds().get_runmode()
 
     def build_cron_job_commands(self, **kwargs):
         absolute_path   = kwargs.get("absolute_path")
