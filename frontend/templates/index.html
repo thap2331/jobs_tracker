@@ -3,6 +3,9 @@
 {% block content %}
 <div id = 'main-title-container'>
     <h1 id = 'main-title'>Job Tracking Dashboard</h1>
+    {% if 'test' == runMode %}
+    <h3 class="testmode">TEST MODE</h3>
+    {% endif %}
 </div>
 
 <!-- Create tabs -->

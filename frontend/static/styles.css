@@ -33,13 +33,24 @@ body {
     border-top-right-radius: 10px;
     background-color: #01071f;
     color: #EFF7FF;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 50px;
 }
 
 #main-title {
-    padding: 20px 0px 25px 35px;
+    padding-left: 35px;
     font-weight: 400;
-    margin-top: 0px;
-    margin-bottom: 50px;
+}
+
+.testmode {
+    margin-left: 25px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 400;
+    background-color: #ebd534;
+    color: #01071f;
 }
 
 .tabs {

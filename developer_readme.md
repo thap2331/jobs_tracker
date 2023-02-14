@@ -24,10 +24,13 @@
   - or just copy paste your absolute path as `absolute_path=abs_path_of_directory`
 
 - Set up your test environment `source setenv.sh test`
-- Run `docker compose up test_entrypoint test_database -d`.   
-    -   Wait till all services are up. Use `-d` to run in a detached mode.
-- Now, run `bash setup/test_setup.sh` to create tables in your test database.
-  This will also add a few sample rows.
+- Spin up your database and fill data
+  - Method 1
+    - Now, run `bash setup/one_time_setup.sh test` to start containers and create tables in your database.
+  - Method 2
+    - Run `docker compose up test_entrypoint test_database -d`.   
+        -   Wait till all services are up. Use `-d` to run in a detached mode.
+    - Now, run `bash setup/test_setup.sh` to create tables in your test database.
   - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
 - To see more data, ensure that you have [psql (link for linux)](https://www.postgresql.org/download/linux/) and use [these commands](/setup/command_line_cmds.sh) as you line.
 
@@ -70,6 +73,17 @@
 
 ### Things to do next (order by priority)
 
+- Prep for release
+  - Developer's version
+    - Improve readme for developers
+    - Test with Shaswot, Caleb for readme
+  - Prod version
+    - Read and make it better (readme)
+  - Start adding tests
+  - GitHub Actions
+  - What liscence to release it under
+
+
 - Add cron job
   - Use .env file to find absolute path. `echo "$(sort .env.dev | uniq)" > .env.dev`
   - To run crawl in prod mode (for this work delete the repo and make readme as you set up for a prod.)
@@ -81,18 +95,6 @@
 - Frontend
   - when trying to update we see: `This url already appears in another entry. Please enter a unique url.`
   - convert db connect in flask app to sqlalchmy
-  - cron job
-    - crawl cron job
-      - we need (1) full path of the folder
-      - everything else is default (run crawl job, time it runs - every hour, linux)
-      - once submitted, 
-        - add cron job in your box
-        - store in a database (seperate by space); do not allow to add more unless deleted
-    - email cron job
-      - we need (1) full path of the folder
-      - everything else is default (run email job, time it runs - every hour, linux)
-      - once submitted, store in a database (seperate by space); do not allow to add more unless deleted
-  - delete db configs file and use file from outside
 
 - Fill out test env including dummy data for all tables
 - Crawling

@@ -13,6 +13,8 @@ from build_cron_job import BuildCron
 
 conn_string             = GetDBCreds().get_conn_string_python_psycopg2()
 absolute_path_from_env  = GetDBCreds().get_absolute_path()
+run_mode                = GetDBCreds().get_runmode()
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '6d1209d285f8030865a7faac38ec5b5e4c5d11fa994f0854'
@@ -86,7 +88,8 @@ def index():
         resultsTableData = resultsTableData,
         cronJobListData = cronJobListData,
         cronlogsData = cronlogsData,
-        crawledData = crawledData
+        crawledData = crawledData,
+        runMode     = run_mode
         )
 
 
