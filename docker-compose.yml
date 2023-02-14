@@ -11,7 +11,8 @@ services:
     volumes:
       - ./:/app
     depends_on:
-      - prod_database
+      prod_database:
+        condition: "service_healthy"
     restart: on-failure
     networks:
       - jt_network
@@ -46,6 +47,11 @@ services:
       - 5432:5432
     networks:
       - jt_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jt_db -p 5432 -h jt_pg_container"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   test_database:
     container_name: test_jt_pg_container
@@ -83,6 +89,7 @@ services:
       - '5000:5000'
     environment:
       run_mode: ${run_mode}
+      absolute_path: ${absolute_path}
     networks:
       - jt_network
 
