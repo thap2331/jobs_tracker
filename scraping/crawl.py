@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 
 from database.data_models import Jobs, CrawlLogs, CronLogs, JobListingMeta
 from database.db_manager import DBConnect
+from database.db_manager import Ingestion
 from scraping.utils.crawl_utils import Crawl
-from tracker.add_crawl_logs import AddCronLogs
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f','--force_crawl', nargs='+', help='use all or company name', required=False)
@@ -81,7 +81,7 @@ if args.force_crawl:
 if args.choose_crawl:
     crawl_list = CrawlPrepare().get_requested_crawl()
 
-AddCronLogs().add_cron_logs({"info":"cron crawl"})
+Ingestion().insert_data(CronLogs, {"info":"cron crawl", "last_attempted_crawl":datetime.now()})
 
 print('crawl list:', crawl_list)
 Crawl().start_crawling(crawl_list)

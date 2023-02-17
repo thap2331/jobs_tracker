@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# cd /home/usr/personal_projects/jobs_tracker/
-
 if [[ $# -ne 2 ]]; then
     echo "Two args required. First: run mode, second: absolute path for repo."
     exit

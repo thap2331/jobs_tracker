@@ -24,7 +24,7 @@ class JobListingMeta(Base):
 
     __tablename__       = "joblisting"
     url                 = Column(String, primary_key=True)
-    title_in_link       = Column(Boolean) #Link or webpage, True if Link
+    title_in_link       = Column(Boolean, default=False) #Link or webpage, True if Link
     title_in_posting    = Column(Boolean) #True if title_in_link else false
     title_in_page_title = Column(Boolean) #Require if title in Link is False
     job_link_pattern    = Column(String) #which links to follow - default to structured data, job link pattern

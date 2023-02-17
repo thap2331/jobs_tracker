@@ -2,10 +2,9 @@ import sys
 sys.path.insert(0, '.')
 
 import os, psycopg2
-from sqlalchemy import update, inspect, insert as sqlalchemy_insert
+from sqlalchemy import update, inspect, insert as sqlalchemy_insert, select, create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, select
-from sqlalchemy.dialects.postgresql import insert
+# from sqlalchemy.dialects.postgresql import insert
 
 from database.db_configs import GetDBCreds
 from database.data_models import Jobs
