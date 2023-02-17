@@ -1,0 +1,37 @@
+{
+    "test":{
+        "joblisting":[
+            {
+                "url":"https://www.onxmaps.com/join-our-team",
+                "job_title":"backend engineer",
+                "title_in_link":false
+
+            },
+            {
+                "url":"https://www.texastribune.org/jobs/",
+                "job_title":"sales-mgr;director-audience-growth-engagement",
+                "title_in_link":true
+            },
+            {
+                "url":"https://jobs.intel.com/en/search-jobs",
+                "job_title":"insight",
+                "title_in_link":false
+            }
+        ],
+        "crawlogs":[
+            {"url":"url1.com"},
+            {"url":"url2.com"}
+        ]
+    },
+    "prod":{
+        "joblisting":[
+            {
+                "url":"https://www.onxmaps.com/join-our-team",
+                "job_title":"backend engineer"
+            }
+        ],
+        "crawlogs":[
+            {"url":"url1forprod.com"}
+        ]
+    }
+}

@@ -6,11 +6,11 @@ from datetime import datetime
 
 from scraping.pipeline import ProcessData
 from database.data_models import Jobs, CrawlLogs, JobListingMeta
-from database.db_manager import DBConnect
+from database.db_manager import DBConnect, Ingestion
 from scraping.title_base import TitleStrategies
 from scraping.utils.extract_links import ExtractAllLinks
 from scraping.utils.markup_utils import MarkupUtils
-from tracker.add_crawl_logs import AddCrawlLogs
+from scraping.utils.utils import PrepCrawlogs
 
 class StrategyList():
 
@@ -107,6 +107,7 @@ class Crawl:
         self.all_data = self.db.sql_fetchall_records(JobListingMeta)
         self.title_finder = TitleFinderStrategy()
         self.scrapeutils = ScrapeUtils()
+        self.ingestion = Ingestion()
 
     def find_title_using_existing_settings(self, data):
         all_urls = []
@@ -159,7 +160,12 @@ class Crawl:
         
         print("\nCrawable list: ", crawlable_list, '\n')
         for data in crawlable_list:
-            AddCrawlLogs().add_crawl_logs(data)
+
+            #Add to crawl Logs           
+            updated_crawlogs = PrepCrawlogs().prepare_crawlogs_from_last_crawled(data)
+            self.ingestion.insert_data(CrawlLogs, updated_crawlogs)
+
+            #Find strategy
             stratgey_in_settings = self.title_finder.strategy_from_settings(data)
             if stratgey_in_settings:
                 self.find_title_using_existing_settings(data)

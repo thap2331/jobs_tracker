@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# cd /home/usr/personal_projects/jobs_tracker/
 cd $2
 source setenv.sh $1
 
