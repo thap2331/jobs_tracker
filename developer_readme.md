@@ -4,7 +4,7 @@
 ### First time use
 - Get [Docker](https://docs.docker.com/get-docker/)
     - Ensure you can run docker as a user. Check [post-install](https://docs.docker.com/engine/install/linux-postinstall/) for linux.
-- Clone repo `git clone [repo]`
+- Clone repo `git clone https://github.com/thap2331/jobs_tracker.git`
 - Go to jobs tracker, i.e. cd into it.
 - Copy `.env.example` and create `.env.dev` file.
     - Run command: `cp .env.example .env.dev`
@@ -25,18 +25,13 @@
 
 - Set up your test environment `source setenv.sh test`
 - Spin up your database and fill data
-  - Method 1
-    - Now, run `bash setup/one_time_setup.sh test` to start containers and create tables in your database.
-  - Method 2
-    - Run `docker compose up test_entrypoint test_database -d`.   
-        -   Wait till all services are up. Use `-d` to run in a detached mode.
-    - Now, run `bash setup/test_setup.sh` to create tables in your test database.
+  - Run `bash setup/one_time_setup.sh test` to start containers and create tables in your database.
   - Now go to [localhost:5000](http://localhost:5000/). You should see a page with more data. 
 - To see more data, ensure that you have [psql (link for linux)](https://www.postgresql.org/download/linux/) and use [these commands](/setup/command_line_cmds.sh) as you line.
 
 ### Start crawling
 - Run crawl
-    - For test entry container, test db, frontend, run `docker compose up test_entrypoint test_database frontend -d`
+    - For spinning up required containers (test entry container, test db, frontend), run `docker compose up test_entrypoint test_database frontend -d`
   - Wait for it to be done. Then run `docker exec -it test_box bash -c "python scraping/crawl.py -f all"`. See [argparse](/scraping/crawl.py) for more options.
 
 ### Shut down
@@ -63,6 +58,34 @@
 - Copy `Fullcronjob` command and paste it in your bash command line. Use `crontab -l` to see all cron jobs.
 - Remove a cron jon. Copy `Remove cronjob` command and paste it in your bash command line. Use `crontab -l` to see all cron jobs.
     
+
+### How to do the development work (for myself or, contributing to the project)?
+
+#### Tips
+- [Learn docker](https://docs.docker.com/language/python/)
+- Learn basic scraping
+- Learn basic bash
+
+#### Basic fundamental setup (must have)
+- First, we are assuming that you have done [inital setup](#one-time-setup-only-once-to-set-database-tables).
+- Ensure your run mode is test. Run `source setenv.sh test` . To check you can run `export -p | grep run_mode`
+- You can always check if the required containers (frontend and database) are still running, i.e., use `docker ps`
+  - Alternatively, you can go to `localhost:5000` in your browser. It should say `TEST MODE`.
+
+#### Example 1: Contribute to frontend
+- [Ensure you have done basic set up from above](#basic-setup)
+- You can use `docker compose up test_database frontend -d`
+  - You can see the containers name in [docker compose file](/docker-compose.yml).
+- You can get started developing from here. Any change locally you make should show up inside the container as well, thus on `localhost:5000` frontend.
+- To stop containers, use `docker stop test_database frontend`
+
+
+#### Example 2: Contribute to crawling
+- [Ensure you have done basic set up from above](#basic-setup)
+- You can use `docker compose up test_entrypoint test_database frontend -d`
+  - You can see the containers name in [docker compose file](/docker-compose.yml).
+- You can get started developing from here. Any change locally you make should show up inside the container as well, thus on `localhost:5000` frontend. 
+- To stop containers, use `docker stop test_database frontend test_entrypoint`
 
 # Other
 
@@ -127,7 +150,7 @@
   - A column of cronjobs is written as `last_attempted_crawl`. Change this to `last_attempted` and then update it wherever it get impacted.
   - work with database from one place only, i.e., interact with it using one class
 - Email work
-  - Allow email from a given box without requiring from one's email.
+  - Allow email from a given box without requiring from one's email. See if we do it using [docker-mailserver](https://github.com/docker-mailserver/docker-mailserver).
 
 
 # Planned feature extension
