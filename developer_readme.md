@@ -73,7 +73,7 @@
   - Alternatively, you can go to `localhost:5000` in your browser. It should say `TEST MODE`.
 
 #### Example 1: Contribute to frontend
-- [Ensure you have done basic set up from above](#basic-setup)
+- [Ensure you have done basic set up from above](#basic-fundamental-setup-must-have)
 - You can use `docker compose up test_database frontend -d`
   - You can see the containers name in [docker compose file](/docker-compose.yml).
 - You can get started developing from here. Any change locally you make should show up inside the container as well, thus on `localhost:5000` frontend.
@@ -81,7 +81,7 @@
 
 
 #### Example 2: Contribute to crawling
-- [Ensure you have done basic set up from above](#basic-setup)
+- [Ensure you have done basic set up from above](#basic-fundamental-setup-must-have)
 - You can use `docker compose up test_entrypoint test_database frontend -d`
   - You can see the containers name in [docker compose file](/docker-compose.yml).
 - You can get started developing from here. Any change locally you make should show up inside the container as well, thus on `localhost:5000` frontend. 
