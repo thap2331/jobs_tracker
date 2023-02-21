@@ -4,6 +4,9 @@ sys.path.insert(0, '.')
 from database.data_models import Jobs
 from database.db_manager import DBConnect
 
+#At this point we can use this process as a validation only. 
+#We can retire insertion to db. Move db insertions to /database/db_manager, 
+#single source of truth
 
 class Validation:
     def __init__(self) -> None:
