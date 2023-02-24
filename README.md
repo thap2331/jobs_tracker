@@ -2,8 +2,8 @@
 
 ### What is the repo about?
 
-- Assume you want to apply for jobs to specific companies that you care about. In addition, assume, you only want the notifications to specific category of jobs, example, data engineer, data analyst, or economist.
-- The idea of this repo is to allow you to quickly do it and give you the flexibility to extend it.
+- Assume you want to apply for jobs to specific companies that you care about and you only want the notifications to the specific category of jobs, example, data engineer, data analyst, or economist.
+- The idea of this repo is to allow you to quickly do it and give you the flexibility to extend it (example, add ability to pull jobs from certain websites).
 
 ### Benefits
 
