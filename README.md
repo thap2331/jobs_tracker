@@ -27,7 +27,7 @@
     - Run command: `cp .env.example .env`
     - Fill out rest of `.env` file as needed
         - Fill your `email` and `onePasswordEmail` if you want to send email from yourself.
-            - See [here](#email-config) for more
+            - See [email set up below](#email-configs) for more
 
 - Go to jobs tracker directory, i.e. use command line and cd into it.
 - To find current work directory and save in `.env` file, do below:

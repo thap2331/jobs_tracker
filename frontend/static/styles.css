@@ -131,10 +131,10 @@ button.active, .add-button {
     padding: 6px 12px;
 }
 
-#scraping-list {
-    padding: 0px;
+.tab-content.active {
     display: block;
 }
+
 
 table {
     width: 90%;
