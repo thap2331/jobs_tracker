@@ -3,7 +3,7 @@
 ### What is the repo about?
 
 - Assume you want to apply for jobs to specific companies that you care about. In addition, assume, you only want the notifications to specific category of jobs, example, data engineer, data analyst, or economist.
-- The idea of this repo is to allow you to quickly do it and give you the flexibility to extend it.
+- The idea of this repo is to allow you to quickly do it and give you the flexibility the extend it.
 
 ### Benefits
 
@@ -64,8 +64,7 @@
 ### Supported OS system
 
 - Linux: Easy support in Linux boxes for now.
-- MacOs (M2 chip):(Tested with [M2chip define an export platform](https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/1898#issuecomment-1040555210) )
-- Other MacOS: To be tested 
+- MacOS: To be tested
 - Windows: Get (git) bash on windows. To be tested.
 
 
