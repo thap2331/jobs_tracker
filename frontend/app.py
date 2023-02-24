@@ -27,21 +27,11 @@ def get_db_connection():
     except Exception as e:
         print("Cannot connect to pg using ",conn_string, '\n error:', e)
 
-# Get search row
-def get_search_row(link):
+# Get one row
+def get_row(table, column, values):
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM joblisting WHERE url = %s', (link,))
-    row = cursor.fetchone()
-    conn.close()
-    return row
-
-
-# Get results row
-def get_rows(table, column, values):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(f'SELECT * FROM {table} WHERE {column} = %s', values)
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"SELECT * FROM {table} WHERE {column} = '{values}'")
     row = cursor.fetchone()
     conn.close()
     return row
@@ -54,15 +44,12 @@ def index():
     cursor.execute('SELECT * FROM joblisting')
     searchTableData = cursor.fetchall()
 
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM jobs')
     resultsTableData = cursor.fetchall()
 
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM cronjobslist')
     cronJobListData = cursor.fetchall()
 
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM cronlogs')
     cronlogsData = cursor.fetchall()
     if cronlogsData:
@@ -72,7 +59,6 @@ def index():
             if isinstance(last_attempted_crawl, datetime.datetime):
                 row["last_attempted_crawl"] = DateTimeUtils().convert_utc_to_pst(row.get("last_attempted_crawl"))
     
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM crawlogs')
     crawledData = cursor.fetchall()
     if crawledData:
@@ -82,6 +68,7 @@ def index():
                 row["last_attempted_crawl"] = DateTimeUtils().convert_utc_to_pst(row.get("last_attempted_crawl"))
     
     conn.close()
+    activeTab = request.args.get("activeTab") if request.args.get("activeTab") else "scraping-list" 
     return render_template(
         'index.html',
         searchTableData = searchTableData, 
@@ -89,7 +76,8 @@ def index():
         cronJobListData = cronJobListData,
         cronlogsData = cronlogsData,
         crawledData = crawledData,
-        runMode     = run_mode
+        runMode     = run_mode,
+        activeTab   = activeTab
         )
 
 
@@ -97,7 +85,7 @@ def index():
 @app.route('/add_search', methods=('GET', 'POST'))
 def add_search():
     if request.method == 'POST':
-        exists = get_search_row(request.form['url'])
+        exists = get_row('joblisting','url',request.form['url'])
 
         company_name = request.form['company_name']
         job_title = request.form['job_title']
@@ -117,7 +105,7 @@ def add_search():
 
             conn.commit()
             conn.close()
-            return redirect(url_for('index'))
+            return redirect(url_for('index', activeTab='scraping-list'))
 
     return render_template('add_search.html')
 
@@ -125,7 +113,7 @@ def add_search():
 # Navigate to update page
 @app.route('/update', methods=('POST',))
 def update():
-    row = get_search_row(request.form['link'])
+    row = get_row('joblisting','url',request.form['link'])
     return render_template('update.html', row=row)
 
 
@@ -137,7 +125,7 @@ def send_update():
     url = request.form['url']
     company_website = request.form['company_website']
 
-    exists = get_search_row(url)
+    exists = get_row('joblisting','url',url)
 
     if exists and url != request.form['original_link']:
         flash('This url already appears in another entry. Please enter a unique url.')
@@ -152,7 +140,7 @@ def send_update():
 
         conn.commit()
         conn.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('index', activeTab='scraping-list'))
     
     return render_template('update.html', row = get_search_row(request.form['original_link']))
 
@@ -162,6 +150,7 @@ def send_update():
 def delete():
     del_type = request.form['del_type']
 
+    activeTab="scraping-list"
     if del_type == 'joblisting':
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -170,6 +159,7 @@ def delete():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM cronjobslist WHERE cronid = %s', (request.form['cronid'],))
+        activeTab="cronjobs-list"
     else:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -177,7 +167,7 @@ def delete():
 
     conn.commit()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('index', activeTab=activeTab))
 
 # Add new search row
 @app.route('/add_cronjob', methods=('GET', 'POST'))
@@ -204,6 +194,7 @@ def add_cronjob():
                 cronjob=cronjob,
                 boxtype=boxtype
                 )
+            return redirect(url_for('index', activeTab='cronjobs-list'))
 
     return render_template('add_cron_job.html')
 

@@ -10,15 +10,15 @@
 
 <!-- Create tabs -->
 <div class = 'tabs'>
-    <button class="tab-button active" onClick="openTab(event, 'scraping-list')">Scraping List</button>
+    <button class="tab-button {{ 'active' if activeTab=='scraping-list' else '' }}" onClick="openTab(event, 'scraping-list')">Scraping List</button>
     <button class="tab-button" onClick="openTab(event, 'results-list')">Results List</button>
     <button class="tab-button" onClick="openTab(event, 'cronlogs-list')">Cron Logs List</button>
     <button class="tab-button" onClick="openTab(event, 'crawedlogs-list')">Crawled List</button>
-    <button class="tab-button" onClick="openTab(event, 'cronjobs-list')">Cron Jobs Generator</button>
+    <button class="tab-button {{ 'active' if activeTab=='cronjobs-list' else '' }}" onClick="openTab(event, 'cronjobs-list')">Cron Jobs Generator</button>
 </div>
         
 <!-- Create tab content -->
-<div id="scraping-list" class="tab-content">
+<div id="scraping-list" class="tab-content {{ 'active' if activeTab=='scraping-list' else '' }}">
     <table id="scraping-list-table">
         <tr class="table-header">
             <th>Company Name</th>
@@ -81,7 +81,7 @@
     </table>
 </div>
 
-<div id="cronjobs-list" class="tab-content">
+<div id="cronjobs-list" class="tab-content {{ 'active' if activeTab=='cronjobs-list' else '' }}">
     <table id="cronjobs-list-table">
         <tr class="table-header">
             <th>Absolute path</th>
