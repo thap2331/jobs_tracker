@@ -9,7 +9,7 @@
 
 - Given the size of the database you need, you can easily store everything in your local box. In fact, one of the major motivation for this repo is doing everything locally.
 - Set up once. Add the companies, job titles, your email and cron job. Then, you are done. (Well, thats the plan.)
-- Add companies you want. If the companies are not listed, extend it yourself (and maybe contribute to this project).
+- Add the companies you want. If the companies are not listed, extend it yourself (and maybe contribute to this project).
 
 ## Setup
 
