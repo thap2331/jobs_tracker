@@ -99,20 +99,14 @@
 - Prep for release
   - Developer's version
     - Improve readme for developers
-    - Test with Shaswot, Caleb for readme
+    - Test with others for readme
   - Prod version
     - Read and make it better (readme)
   - Start adding tests
   - GitHub Actions
-  - What liscence to release it under
-
 
 - Add cron job
-  - Use .env file to find absolute path. `echo "$(sort .env.dev | uniq)" > .env.dev`
-  - To run crawl in prod mode (for this work delete the repo and make readme as you set up for a prod.)
-  - How to use relative links for a cron job
 - keep things in docker
-  - use frontend for adding cron jobs
   - research on orphan docker containers
   - Do not allow test container to spin up if the run mode is prod
 - Frontend
@@ -122,8 +116,6 @@
 - Fill out test env including dummy data for all tables
 - Crawling
   - Add option to crawl all job listings or few selected job listings
-  - Allow crawling to select a few job listings
-  - Allow crawling if not crawled in last 24 hours
   - Allow crawl logs to have when a website was crawled
   - allow crawl for all by catching exception and logging them
   - for add job listing, allow capability to add job posting or view job listing to be added, check for duplicates
