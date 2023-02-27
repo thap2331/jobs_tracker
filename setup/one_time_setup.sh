@@ -5,7 +5,7 @@ if [[ $1 == "test" ]]; then
     source setenv.sh test
     docker compose up test_entrypoint test_database frontend -d
 
-    docker exec test_box bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
+    docker exec test_jt_pg_container bash -c "pg_isready -d test_jt_db -h test_jt_pg_container -U postgres -p 5432"
     previous_success=$?
     echo "previous_success $previous_success"
 
@@ -32,7 +32,7 @@ else
     source setenv.sh
     docker compose up prod_entrypoint prod_database frontend -d
 
-    docker exec prod_box bash -c "pg_isready -d jt_db -h jt_pg_container -U postgres -p 5432"
+    docker exec jt_pg_container bash -c "pg_isready -d jt_db -h jt_pg_container -U postgres -p 5432"
     previous_success=$?
     echo "previous_success $previous_success"
 

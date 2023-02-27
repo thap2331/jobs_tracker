@@ -45,12 +45,23 @@ class ScrapeUtils:
     def extract_links(self, link, config):
         all_urls = []
         render = config.get('render')
-        if render:
-            markup = self.markup_utils.render_request_html(link)
-        else:
+        if not render:
             markup = self.markup_utils.normal_requests(link)
+            all_urls = self.extract_links_method.extract_links_from_markup(markup, domain_url=link)
 
-        all_urls = self.extract_links_method.extract_links_from_markup(markup, domain_url=link)
+        #condition1: If normal link extract cannot extract link
+        #condition2: if explicit render is asked
+        #Even request html cannot extract links, then fallback to selenium render
+        if not all_urls or render:
+            try:
+                markup = self.markup_utils.render_request_html(link)
+                all_urls = self.extract_links_method.extract_links_from_markup(markup, domain_url=link)
+            except Exception as e:
+                print("Error for request html: ",e)
+            if not all_urls:
+                print("Falling back to selenium render")
+                markup = self.markup_utils.render_using_selenium(link)
+                all_urls = self.extract_links_method.extract_links_from_markup(markup, domain_url=link)
 
         return all_urls
 
