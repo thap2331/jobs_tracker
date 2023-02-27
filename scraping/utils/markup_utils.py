@@ -2,7 +2,7 @@ import sys
 sys.path.insert(0, '.')
 
 from requests_html import HTMLSession
-import requests
+import requests, time
 
 class MarkupUtils:
 
@@ -25,3 +25,25 @@ class MarkupUtils:
 
         return rendered_html
 
+    def render_using_selenium(self, url):
+        # Selenium 4 for loading the Browser Driver 
+        from selenium import webdriver
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.chrome.service import Service
+
+        # Web Driver Manager
+        from webdriver_manager.chrome import ChromeDriverManager
+
+        # Initialising the Chrome Driver
+        chrome_options = Options()
+        chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        driver.get(url)
+        # Delay to load the contents of the HTML FIle
+        time.sleep(2)
+        page_source = driver.page_source
+
+        return page_source

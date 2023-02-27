@@ -45,10 +45,12 @@ class ScrapeUtils:
     def extract_links(self, link, config):
         all_urls = []
         render = config.get('render')
-        if render:
-            markup = self.markup_utils.render_request_html(link)
-        else:
-            markup = self.markup_utils.normal_requests(link)
+        # if render:
+        #     markup = self.markup_utils.render_request_html(link)
+        # else:
+        #     markup = self.markup_utils.normal_requests(link)
+        
+        markup = self.markup_utils.render_using_selenium(link)
 
         all_urls = self.extract_links_method.extract_links_from_markup(markup, domain_url=link)
 
