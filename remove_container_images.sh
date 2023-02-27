@@ -1,7 +1,12 @@
 #!/bin/bash
 
 docker compose stop
-docker compose down --volumes --remove-orphans
-# docker volume rm -f jt_pg_vol_prod jt_pg_vol_test
-# docker container prune -f
-# docker image prune -a -f
+docker compose down --volumes --remove-orphans --rmi all
+echo -e "\n Listing images"
+docker images -a
+echo -e "\n Listing containers"
+docker ps -a
+echo -e "\n Listing containers"
+docker volume ls
+echo -e "\n Listing network"
+docker network ls

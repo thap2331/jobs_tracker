@@ -19,7 +19,7 @@ class MarkupUtils:
     def render_request_html(self, url):
         session = HTMLSession()
         response = session.get(url)
-        response.html.render()
+        response.html.render(scrolldown=3, sleep=3)
         rendered_html = response.html.html
         session.close()
 

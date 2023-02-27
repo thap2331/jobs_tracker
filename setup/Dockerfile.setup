@@ -1,33 +1,26 @@
-# FROM python:3.8-slim-buster
-# FROM --platform=linux/amd64  python:3.9
 FROM python:3.9
 
 WORKDIR /app
 
+# For selenium
 # install google chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 RUN apt-get update -qqy --no-install-recommends && apt-get install -qqy --no-install-recommends google-chrome-stable
-
-# install chromedriver
-# Google Chrome 110.0.5481.177
+# install chromedriver specific version
 RUN apt-get install -yqq unzip
-# RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
-# RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
-
-# RUN wget -qP /tmp/ "https://chromedriver.storage.googleapis.com/110.0.5481.177/chromedriver_linux64.zip"
-# RUN unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-
 RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/110.0.5481.77/chromedriver_linux64.zip
 RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
-
 # set display port to avoid crash
 ENV DISPLAY=:99
 
+# install lib deps for chrome (requests_html)
+# see https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
+RUN apt-get update && apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-# RUN apt-get update
-# RUN apt-get -y install postgresql
+
 
 RUN pwd
 
